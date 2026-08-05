@@ -26,4 +26,16 @@ final class SessionManager {
     var senderId: String {
         UserDefaults.standard.string(forKey: "sender_Id") ?? ""
     }
+    
+    var ProfilePicString: String {
+        UserDefaults.standard.string(forKey: "Profile_Pic") ?? ""
+    }
+    
+    var divisionCode: String {
+        UserDefaults.standard.string(forKey: "division_Code") ?? ""
+    }
+    
+    var isDayEnd: String {
+        UserDefaults.standard.string(forKey: "isDay_End") ?? ""
+    }
 }

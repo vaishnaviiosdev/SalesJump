@@ -17,6 +17,9 @@ class AuthenticationViewModel: ObservableObject {
     @Published var saveSuccessMessage: String = ""
     @Published var uploadImageData: UploadImageResponse?
     @Published var profileImage: UIImage?
+    @Published var changePwdData: passwordResponse?
+    @Published var ImageData: getImageData?
+    @Published var logout: logoutData?
     
     func SignIn(username: String, password: String) async {
     
@@ -37,14 +40,18 @@ class AuthenticationViewModel: ObservableObject {
             let response: LoginModel = try await NetworkManager.shared.postJSON(urlString: login_Url, parameters: parameters, responseType: LoginModel.self
             )
             self.loginData = response
-            self.saveSuccessMessage = response.message ?? "Login Successfully"
             self.showSaveSuccessAlert = true
+            self.saveSuccessMessage = response.message ?? "Login Successfully"
+            
             
             UserDefaults.standard.set(response.response?.SF_Code ?? "", forKey: "Sf_code")
             UserDefaults.standard.set(response.response?.SF_Name ?? "", forKey: "Sf_Name")
             UserDefaults.standard.set(response.response?.Desig_Code ?? "", forKey: "Desig_Code")
             UserDefaults.standard.set(response.response?.Jwt_Token ?? "", forKey: "jwt_Token")
             UserDefaults.standard.set(response.response?.SenderId ?? "", forKey: "sender_Id")
+            UserDefaults.standard.set(response.response?.ProfilePic ?? "", forKey: "Profile_Pic")
+            UserDefaults.standard.set(response.response?.Division_Code ?? "", forKey: "division_Code")
+            UserDefaults.standard.set(response.response?.IsDayEnd ?? "", forKey: "isDay_End")
             UserDefaults.standard.set(true, forKey: "User_Login")
             
             loginSuccess = true
@@ -53,6 +60,48 @@ class AuthenticationViewModel: ObservableObject {
             self.saveSuccessMessage = error.localizedDescription
             self.showSaveSuccessAlert = true
             print("Error fetching data is \(error.localizedDescription)")
+        }
+    }
+    
+    func logout(latitude: String, longitude: String) async {
+        
+        let url = APIClient.shared.qaUrl + "api/\(SessionManager.shared.senderId)/logout"
+        
+        let parameters: [String: Any] = [
+            "sfCode": SessionManager.shared.sfCode,
+            "divisionCode": SessionManager.shared.divisionCode,
+            "srtEndNd": 0,
+            "day": 0,
+            "time": "10:30",
+            "latitude": latitude,
+            "longitude": longitude,
+            "remarks": "",
+            "dayEndKm": "",
+            "isDayEnd": SessionManager.shared.isDayEnd,
+
+            "endKmPhoto": [
+                "imgUrl": "",
+                "title": "",
+                "remarks": ""
+            ],
+
+            "stopWorkPhoto": [
+                "imgUrl": "",
+                "title": "",
+                "remarks": ""
+            ]
+        ]
+        
+        do {
+            let response : logoutData = try await NetworkManager.shared.postJSON(urlString: url, parameters: parameters, responseType: logoutData.self
+            )
+            self.logout = response
+            self.showSaveSuccessAlert = true
+            self.saveSuccessMessage = response.message ?? "Logout Successfully"
+        }
+        catch {
+            self.showSaveSuccessAlert = true
+            self.saveSuccessMessage = error.localizedDescription
         }
     }
     
@@ -155,10 +204,105 @@ class AuthenticationViewModel: ObservableObject {
             else {
                 print("Response is not an image")
             }
-
         }
         catch {
             print(error)
+        }
+    }
+    
+    func fetchImage(fileName: String) async {
+
+        let senderId = SessionManager.shared.senderId
+
+        var components = URLComponents(
+            string: APIClient.shared.qaUrl + "api/\(senderId)/getprofileimage"
+        )!
+
+        components.queryItems = [
+            URLQueryItem(name: "fileName", value: fileName),
+            URLQueryItem(name: "senderId", value: senderId)
+        ]
+
+        guard let url = components.url else { return }
+
+        do {
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("*/*", forHTTPHeaderField: "Accept")
+
+            if let token = UserDefaults.standard.string(forKey: "jwt_Token") {
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            }
+
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let http = response as? HTTPURLResponse else {
+                return
+            }
+
+            print("Status:", http.statusCode)
+
+            if let image = UIImage(data: data) {
+                self.profileImage = image
+                self.saveProfileImage(image)
+            }
+            else {
+                print("Response is not an image")
+            }
+        }
+        catch {
+            print(error)
+        }
+    }
+    
+    func changePassword(pwd: String) async {
+        let senderId = SessionManager.shared.senderId
+
+        guard let url = URL(string: APIClient.shared.qaUrl + "api/\(senderId)/changecredential") else {
+            return
+        }
+
+        do {
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+            if let token = UserDefaults.standard.string(forKey: "jwt_Token") {
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            }
+
+            let parameters: [String: Any] = [
+                "sfCode": SessionManager.shared.sfCode,
+                "passKey": pwd,
+            ]
+
+            request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
+
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let http = response as? HTTPURLResponse else {
+                return
+            }
+
+            print("Status Code:", http.statusCode)
+
+            let decoder = JSONDecoder()
+            let result = try decoder.decode(passwordResponse.self, from: data)
+            
+            print(result)
+
+            await MainActor.run {
+                self.changePwdData = result
+                self.showSaveSuccessAlert = true
+                self.saveSuccessMessage = result.message ?? "Password Changed"
+            }
+        }
+        catch {
+            self.showSaveSuccessAlert = true
+            self.saveSuccessMessage = error.localizedDescription
         }
     }
 }

@@ -32,100 +32,6 @@ struct LoginView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var isLoading = false
-    //@State private var navigateToSettings = false
-    
-//    var body: some View {
-//
-////        GeometryReader { geo in
-////            
-////            
-////
-////                
-////
-////            let isLandscape = geo.size.width > geo.size.height
-////            let isSmallScreen = geo.size.height < 700
-////            let shouldScroll = isLandscape || isSmallScreen
-////
-////            ZStack {
-////                Color.white
-////                    .ignoresSafeArea()
-////
-////                if shouldScroll {
-////                    ScrollView(.vertical, showsIndicators: false) {
-////                        LoginContent(
-////                            geo: geo,
-////                            userName: $userName,
-////                            password: $password,
-////                            loginAction: validateLogin
-////                        )
-////                    }
-////                }
-////                else {
-////                    LoginContent(
-////                        geo: geo,
-////                        userName: $userName,
-////                        password: $password,
-////                        loginAction: validateLogin
-////                    )
-////                }
-////                toastOverlay
-////            }
-////            .toast(toastManager)
-////            .loadingOverlay(isLoading, text: "Loading...")
-//////            onAppear {
-//////                
-//////                let screenHeight = geo.size.height
-//////                let screenWidth = geo.size.width
-//////
-//////                print("Width: \(screenWidth)")
-//////                print("Height: \(screenHeight)")
-//////            }
-//////            .navigationDestination(isPresented: $navigateToSettings) {
-//////                    SettingsView()
-//////            }
-////        }
-//        
-//        GeometryReader { geo in
-//
-//            let isLandscape = geo.size.width > geo.size.height
-//            let isSmallScreen = geo.size.height < 700
-//            let shouldScroll = isLandscape || isSmallScreen
-//
-//            ZStack {
-//                Color.white
-//                    .ignoresSafeArea()
-//
-//                if shouldScroll {
-//                    ScrollView(.vertical, showsIndicators: false) {
-//                        LoginContent(
-//                            geo: geo,
-//                            userName: $userName,
-//                            password: $password,
-//                            loginAction: validateLogin
-//                        )
-//                    }
-//                } else {
-//                    LoginContent(
-//                        geo: geo,
-//                        userName: $userName,
-//                        password: $password,
-//                        loginAction: validateLogin
-//                    )
-//                }
-//
-//                toastOverlay
-//            }
-//            .onAppear {
-//                print("Width: \(geo.size.width)")
-//                print("Height: \(geo.size.height)")
-//            }
-//            .onChange(of: geo.size.height) { newHeight in
-//                print("Height Changed: \(newHeight)")
-//            }
-//            .toast(toastManager)
-//            .loadingOverlay(isLoading, text: "Loading...")
-//        }
-//    }
     
     var body: some View {
         GeometryReader { geo in
@@ -151,7 +57,9 @@ struct LoginView: View {
                 toastOverlay
             }
             .onChange(of: vm.loginSuccess) { success in
-                if success {
+                guard success else { return }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     router.loginSuccess()
                 }
             }
@@ -194,10 +102,6 @@ struct LoginView: View {
             startLoading()
             await vm.SignIn(username: userName, password: password)
             stopLoading()
-            
-//            if vm.loginData?.success == true {
-//                navigateToSettings = true
-//            }
         }
     }
     
@@ -311,7 +215,6 @@ struct LoginContent: View {
 }
 
 struct LoginAccountView: View {
-    //@State private var user = "User Name"
     @Binding var userName: String
     @Binding var password: String
 
@@ -327,8 +230,7 @@ struct LoginAccountView: View {
                 .frame(maxWidth: .infinity)
 
             VStack(alignment: .leading, spacing: 5) {
-               // Login_TxtfieldName(titleName: $user)
-                
+                            
                 Text("User name")
                     .font(.poppinsRegular(13))
 
@@ -388,7 +290,8 @@ struct PasswordTextField: View {
                     TextField("Enter Password", text: $password)
                         .font(.poppinsRegular(13))
 
-                } else {
+                }
+                else {
 
                     SecureField("Enter Password", text: $password)
                         .font(.poppinsRegular(13))
