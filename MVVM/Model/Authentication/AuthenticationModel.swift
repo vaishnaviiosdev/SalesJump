@@ -59,3 +59,18 @@ struct ProfileImageData: Codable {
     let message: String?
     let imageUrl: String?
 }
+
+struct passwordResponse: Codable {
+    let message: String?
+}
+
+struct getImageData: Codable {
+    let base64: String?
+    let contentType: String?
+    let fileName: String?
+}
+
+struct logoutData: Codable {
+    let success: Bool?
+    let message: String?
+}

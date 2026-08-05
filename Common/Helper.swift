@@ -178,7 +178,7 @@ struct ToastModifier: ViewModifier {
                 VStack {
                     Spacer()
                     ToastView(message: toastManager.message)
-                        .padding(.bottom, 60)
+                        .padding(.bottom, 30)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
@@ -201,6 +201,15 @@ struct ToastView: View {
             .transition(.opacity)
             .animation(.easeInOut(duration: 0.3), value: message)
     }
+}
+
+func isValidPassword(_ password: String) -> Bool {
+
+    let passwordRegex =
+    "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&^#()_+=\\-]).{8,}$"
+
+    return NSPredicate(format: "SELF MATCHES %@", passwordRegex)
+        .evaluate(with: password)
 }
 
 //

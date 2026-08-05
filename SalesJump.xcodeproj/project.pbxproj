@@ -23,6 +23,8 @@
 		3880E0173018CCAE00075E50 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3880E0163018CB9B00075E50 /* NetworkManager.swift */; };
 		3880E0193018D22D00075E50 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3880E0183018D22800075E50 /* APIClient.swift */; };
 		3880E01B3018D5D400075E50 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3880E01A3018D5CE00075E50 /* Constant.swift */; };
+		3881C9983021EE5A00369C3E /* demoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3881C9973021EE5A00369C3E /* demoView.swift */; };
+		3881C99A3021F9A300369C3E /* ChangePwdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3881C9993021F9A300369C3E /* ChangePwdView.swift */; };
 		388C567F3019D204002C252C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C567E3019D204002C252C /* SettingsView.swift */; };
 		388C569D301A0BDA002C252C /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569C301A0BD1002C252C /* CoreDataManager.swift */; };
 		388C569F301A1D49002C252C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569E301A1D42002C252C /* SessionManager.swift */; };
@@ -46,6 +48,8 @@
 		3880E0163018CB9B00075E50 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		3880E0183018D22800075E50 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		3880E01A3018D5CE00075E50 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		3881C9973021EE5A00369C3E /* demoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demoView.swift; sourceTree = "<group>"; };
+		3881C9993021F9A300369C3E /* ChangePwdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePwdView.swift; sourceTree = "<group>"; };
 		388C567E3019D204002C252C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		388C569C301A0BD1002C252C /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		388C569E301A1D42002C252C /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
@@ -144,6 +148,8 @@
 				386C56A7301722C10066DC31 /* WelcomeView.swift */,
 				386C56C230174F020066DC31 /* LoginView.swift */,
 				388C567E3019D204002C252C /* SettingsView.swift */,
+				3881C9973021EE5A00369C3E /* demoView.swift */,
+				3881C9993021F9A300369C3E /* ChangePwdView.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -287,6 +293,8 @@
 				388C567F3019D204002C252C /* SettingsView.swift in Sources */,
 				3880E0173018CCAE00075E50 /* NetworkManager.swift in Sources */,
 				386C56C1301739210066DC31 /* Common.swift in Sources */,
+				3881C99A3021F9A300369C3E /* ChangePwdView.swift in Sources */,
+				3881C9983021EE5A00369C3E /* demoView.swift in Sources */,
 				3880E0113018B66300075E50 /* AuthenticationModel.swift in Sources */,
 				386C56B9301734350066DC31 /* Helper.swift in Sources */,
 				386C56C330174F020066DC31 /* LoginView.swift in Sources */,
