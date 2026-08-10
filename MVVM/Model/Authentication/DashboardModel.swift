@@ -44,3 +44,21 @@ struct MTDData: Codable {
     let TotalOrderValue: String?
     let TargetValue: String?
 }
+
+struct RecentActivityModel: Codable {
+    let success: Bool?
+    let data: [RecentActivityData]?
+}
+
+struct RecentActivityData: Codable, Identifiable {
+    var id = UUID().uuidString
+    let Title: String?
+    let Amount: Int?
+    let Date: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case Title
+        case Amount
+        case Date
+    }
+}

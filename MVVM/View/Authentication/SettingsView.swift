@@ -173,6 +173,7 @@ struct SettingsView: View {
                 Text("GPS is required to get your accurate location. Please enable GPS in settings")
             }
             .loadingOverlay(isLoading, text: "Loading...")
+            .navigationBarBackButtonHidden(true)
         }
     }
     
