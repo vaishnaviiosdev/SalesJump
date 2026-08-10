@@ -17,6 +17,9 @@ struct SettingsView: View {
     @AppStorage("Sf_Name") private var sfName = ""
     @AppStorage("Desig_Code") private var desigCode = ""
     @State private var showLogoutAlert = false
+    @StateObject private var permissionManager = PermissionManager()
+    @EnvironmentObject var router: AppRouter
+    @State private var isLoading = false
     
     var body: some View {
         GeometryReader { geo in
@@ -89,7 +92,36 @@ struct SettingsView: View {
                 if showLogoutAlert {
                     LogoutAlertView(
                         onOK: {
+                            showLogoutAlert = false
+                            startLoading()
                             
+                            permissionManager.onLocationReceived = { location in
+
+                                Task {
+                                    
+
+                                    await vm.logout(
+                                        latitude: "\(location.coordinate.latitude)",
+                                        longitude: "\(location.coordinate.longitude)"
+                                    )
+
+                                    stopLoading()
+
+                                    if vm.logout?.success == true {
+
+                                        UserDefaults.standard.removeObject(forKey: "User_Login")
+                                        UserDefaults.standard.removeObject(forKey: "jwt_Token")
+                                        UserDefaults.standard.removeObject(forKey: "Sf_Name")
+                                        UserDefaults.standard.removeObject(forKey: "Sf_code")
+                                        UserDefaults.standard.removeObject(forKey: "Desig_Code")
+                                        UserDefaults.standard.removeObject(forKey: "sender_Id")
+
+                                        router.logout()
+                                    }
+                                }
+                            }
+
+                            permissionManager.requestLocation()
                         },
                         onCancel: {
                             showLogoutAlert = false
@@ -98,7 +130,7 @@ struct SettingsView: View {
                 }
             }
             .onAppear {
-                
+                //permissionManager.requestLocation()
                 sfName = UserDefaults.standard.string(forKey: "Sf_Name") ?? ""
                 desigCode = UserDefaults.standard.string(forKey: "Desig_Code") ?? ""
 
@@ -127,7 +159,29 @@ struct SettingsView: View {
                     await vm.uploadImage(selectedImage: image)
                 }
             }
+            .alert(
+                "Enable GPS",
+                isPresented: $permissionManager.showPermissionAlert
+            ) {
+                Button("Settings") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("GPS is required to get your accurate location. Please enable GPS in settings")
+            }
+            .loadingOverlay(isLoading, text: "Loading...")
         }
+    }
+    
+    private func startLoading() {
+        isLoading = true
+    }
+    
+    private func stopLoading() {
+        isLoading = false
     }
 }
 

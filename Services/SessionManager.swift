@@ -19,10 +19,6 @@ final class SessionManager {
         UserDefaults.standard.string(forKey: "Sf_Name") ?? ""
     }
     
-    var isEventCaptureMandatory: Int {
-        UserDefaults.standard.integer(forKey: "Desig_Code")
-    }
-    
     var senderId: String {
         UserDefaults.standard.string(forKey: "sender_Id") ?? ""
     }
@@ -35,7 +31,11 @@ final class SessionManager {
         UserDefaults.standard.string(forKey: "division_Code") ?? ""
     }
     
-    var isDayEnd: String {
-        UserDefaults.standard.string(forKey: "isDay_End") ?? ""
+    var isDayEnd: Bool {
+        (UserDefaults.standard.string(forKey: "isDay_End") ?? "").lowercased() == "true"
+    }
+    
+    var Desig_Code: String {
+        UserDefaults.standard.string(forKey: "Desig_Code") ?? ""
     }
 }

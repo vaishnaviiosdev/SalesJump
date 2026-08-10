@@ -42,24 +42,31 @@ struct ImageV: View {
 }
 
 struct CustomBtn: View {
+
     var title: String
     var height: CGFloat = 50
     var width: CGFloat = .infinity
     var cornerRadius: CGFloat = 9
     var fontsize: CGFloat = 17
-    var backgroundColor: Color = Color.white
+    var backgroundColor: Color = .white
+    var foregroundColor: Color = .white
+    var borderColor: Color = .clear
+    var borderWidth: CGFloat = 1         
     var fontWeight: Font.Weight = .medium
     var action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             Text(title)
+                .font(.poppinsMedium(fontsize))
+                .foregroundColor(foregroundColor)
                 .frame(maxWidth: width, minHeight: height)
                 .background(backgroundColor)
+                .overlay(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .stroke(borderColor, lineWidth: borderWidth)
+                )
                 .cornerRadius(cornerRadius)
-                .font(.poppinsMedium(fontsize))
-                .foregroundColor(.white)
-                .fontWeight(fontWeight)
         }
     }
 }

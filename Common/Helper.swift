@@ -212,6 +212,12 @@ func isValidPassword(_ password: String) -> Bool {
         .evaluate(with: password)
 }
 
+func getTodayDate() -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    return formatter.string(from: Date())
+}
+
 //
 //struct CustomAlertModifier: ViewModifier {
 //    @ObservedObject var manager: CustomAlertManager

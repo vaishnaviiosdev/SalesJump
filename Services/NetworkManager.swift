@@ -28,7 +28,14 @@ class NetworkManager {
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             request.setValue("application/json", forHTTPHeaderField: "Accept")
-            
+
+            // Add Bearer Token
+            if let token = UserDefaults.standard.string(forKey: "jwt_Token"),
+               !token.isEmpty {
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                print("Authorization: Bearer \(token)")
+            }
+
             request.cachePolicy = .reloadIgnoringLocalCacheData
 
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -47,28 +54,86 @@ class NetworkManager {
 
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .useDefaultKeys
+
             return try decoder.decode(T.self, from: data)
-        }
-        catch let DecodingError.typeMismatch(type, context) {
+
+        } catch let DecodingError.typeMismatch(type, context) {
             print("Type mismatch for \(type):", context.debugDescription)
             print("CodingPath:", context.codingPath)
             throw DecodingError.typeMismatch(type, context)
-        }
-        catch let DecodingError.keyNotFound(key, context) {
+
+        } catch let DecodingError.keyNotFound(key, context) {
             print("Missing key '\(key.stringValue)':", context.debugDescription)
             print("CodingPath:", context.codingPath)
             throw DecodingError.keyNotFound(key, context)
-        }
-        catch let DecodingError.valueNotFound(value, context) {
+
+        } catch let DecodingError.valueNotFound(value, context) {
             print("Value not found for \(value):", context.debugDescription)
             print("CodingPath:", context.codingPath)
             throw DecodingError.valueNotFound(value, context)
-        }
-        catch {
+
+        } catch {
             print("Error fetching data:", error.localizedDescription)
             throw error
         }
     }
+    
+//    func fetchData<T: Decodable>(
+//        from urlString: String,
+//        as type: T.Type
+//    ) async throws -> T {
+//
+//        guard let url = URL(string: urlString) else {
+//            throw URLError(.badURL)
+//        }
+//
+//        print("Requesting URL:", url)
+//
+//        do {
+//            var request = URLRequest(url: url)
+//            request.httpMethod = "GET"
+//            request.setValue("application/json", forHTTPHeaderField: "Accept")
+//            
+//            request.cachePolicy = .reloadIgnoringLocalCacheData
+//
+//            let (data, response) = try await URLSession.shared.data(for: request)
+//
+//            if let httpResponse = response as? HTTPURLResponse {
+//                print("HTTP Status:", httpResponse.statusCode)
+//
+//                guard 200..<300 ~= httpResponse.statusCode else {
+//                    throw URLError(.badServerResponse)
+//                }
+//            }
+//
+//            if let responseString = String(data: data, encoding: .utf8) {
+//                print("The Fetch Data Response is:\n\(responseString)")
+//            }
+//
+//            let decoder = JSONDecoder()
+//            decoder.keyDecodingStrategy = .useDefaultKeys
+//            return try decoder.decode(T.self, from: data)
+//        }
+//        catch let DecodingError.typeMismatch(type, context) {
+//            print("Type mismatch for \(type):", context.debugDescription)
+//            print("CodingPath:", context.codingPath)
+//            throw DecodingError.typeMismatch(type, context)
+//        }
+//        catch let DecodingError.keyNotFound(key, context) {
+//            print("Missing key '\(key.stringValue)':", context.debugDescription)
+//            print("CodingPath:", context.codingPath)
+//            throw DecodingError.keyNotFound(key, context)
+//        }
+//        catch let DecodingError.valueNotFound(value, context) {
+//            print("Value not found for \(value):", context.debugDescription)
+//            print("CodingPath:", context.codingPath)
+//            throw DecodingError.valueNotFound(value, context)
+//        }
+//        catch {
+//            print("Error fetching data:", error.localizedDescription)
+//            throw error
+//        }
+//    }
 
 //    func postDatas<T: Decodable>(
 //        urlString: String,
@@ -141,6 +206,58 @@ class NetworkManager {
 
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
+
+        print("Request URL:", urlString)
+
+        if let body = request.httpBody,
+           let json = String(data: body, encoding: .utf8) {
+            print("Request Body:", json)
+        }
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+
+        print("Status Code:", httpResponse.statusCode)
+
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("Response:", responseString)
+        }
+
+        guard 200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.badServerResponse)
+        }
+
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+    
+    func postTokenJSON<T: Decodable>(
+        urlString: String,
+        parameters: [String: Any],
+        responseType: T.Type
+    ) async throws -> T {
+
+        guard let url = URL(string: urlString) else {
+            throw URLError(.badURL)
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        // Add JWT Token
+        if let token = UserDefaults.standard.string(forKey: "jwt_Token") {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            print("Authorization: Bearer \(token)")
+        } else {
+            print("JWT Token not found")
+        }
 
         request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
 
