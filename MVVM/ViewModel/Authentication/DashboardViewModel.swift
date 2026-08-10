@@ -15,6 +15,7 @@ class DashboardViewModel: ObservableObject {
     @Published var secondarySales: secondarySalesResponse?
     @Published var primarySales: primarySalesResponse?
     @Published var MTD: MTDResponse?
+    @Published var recentActivity: RecentActivityModel?
     
     func getSecondarySales(Type: Int) async {
         
@@ -61,6 +62,26 @@ class DashboardViewModel: ObservableObject {
             let response : MTDResponse = try await NetworkManager.shared.fetchData(from: url, as: MTDResponse.self
             )
             self.MTD = response
+        }
+        catch {
+            print("Error fetching data is \(error.localizedDescription)")
+        }
+    }
+    
+    func getRecentActivity() async {
+        
+        let todayDate = getTodayDate()
+        
+        let url =
+        APIClient.shared.qaUrl +
+        "api/\(SessionManager.shared.senderId)/recentactivities" +
+        "?sfCode=\(SessionManager.shared.sfCode)" +
+        "&activityDate=\(todayDate)"
+        
+        do {
+            let response : RecentActivityModel = try await NetworkManager.shared.fetchData(from: url, as: RecentActivityModel.self
+            )
+            self.recentActivity = response
         }
         catch {
             print("Error fetching data is \(error.localizedDescription)")

@@ -10,16 +10,19 @@ import SwiftUI
 struct DashboardView: View {
     @StateObject private var vm = AuthenticationViewModel()
     @StateObject private var dashboardVM = DashboardViewModel()
+    @State private var showSettings = false
     
     var body: some View {
         GeometryReader { geo in
             ZStack {
                 Color.white
-                
+                    .ignoresSafeArea()
+
                 VStack(alignment: .leading, spacing: 10) {
-                    
+
                     HStack {
                         let imageSize = min(geo.size.width * 0.13, 100)
+
                         if let image = vm.profileImage {
                             Image(uiImage: image)
                                 .resizable()
@@ -27,7 +30,8 @@ struct DashboardView: View {
                                 .frame(width: imageSize, height: imageSize)
                                 .clipShape(Circle())
                                 .overlay(
-                                    Circle().stroke(.black, lineWidth: 1)
+                                    Circle()
+                                        .stroke(.black, lineWidth: 1)
                                 )
                         }
                         else {
@@ -37,67 +41,104 @@ struct DashboardView: View {
                                 .frame(width: imageSize, height: imageSize)
                                 .clipShape(Circle())
                                 .overlay(
-                                    Circle().stroke(.black, lineWidth: 1)
+                                    Circle()
+                                        .stroke(.black, lineWidth: 1)
                                 )
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 10) {
                             Text(SessionManager.shared.sfName)
                                 .font(.poppinsMedium(16))
-                            
+
                             Text(SessionManager.shared.Desig_Code)
                                 .font(.poppinsMedium(16))
-                                .foregroundColor(Color.appTextGrey)
+                                .foregroundColor(.appTextGrey)
                         }
-                        
-                        Spacer()
-                        
-                        ImageV(name: "gearshape", type: .systemName, color: .black)
-                    }
-                    
-                    Text("Quick Actions")
-                        .font(.poppinsSemiBold(16))
-                        .foregroundColor(.black)
-                    
-                    Spacer().frame(height: 5)
-                    
-                    HStack(spacing: 8) {
-                        HomeButtons(
-                            imageName: "Secondary Order",
-                            title: "Retailer Order"
-                        )
 
-                        HomeButtons(
-                            imageName: "Primary Order",
-                            title: "Primary Order"
-                        )
+                        Spacer()
+
+                        Button {
+                            showSettings = true
+                        } label: {
+                            ImageV(
+                                name: "gearshape",
+                                type: .systemName,
+                                color: .black
+                            )
+                        }
                     }
-                    
-                    TodayActivityView(vm: dashboardVM)
-                    
-                    buttonView()
-                    
-                    if let mtdData = dashboardVM.MTD?.data?.first {
-                        MTDView(data: mtdData)
+
+                    CustomBtn(
+                        title: "Check-IN",
+                        height: UIDevice.current.userInterfaceIdiom == .pad ? 60 : 40,
+                        cornerRadius: 5,
+                        fontsize: 13,
+                        backgroundColor: .appPrimary,
+                        fontWeight: .heavy
+                    ) {
+                        UIApplication.shared.dismissKeyboard()
                     }
-                    
-                    RecentActivityView()
-                    
-                    Spacer()
+
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack(alignment: .leading, spacing: 10) {
+
+//                            Text("Quick Actions")
+//                                .font(.poppinsSemiBold(16))
+//                                .foregroundColor(.black)
+//
+//                            Spacer()
+//                                .frame(height: 5)
+//
+//                            HStack(spacing: 8) {
+//                                HomeButtons(
+//                                    imageName: "Secondary Order",
+//                                    title: "Retailer Order"
+//                                )
+//
+//                                HomeButtons(
+//                                    imageName: "Primary Order",
+//                                    title: "Primary Order"
+//                                )
+//                            }
+//
+//                            TodayActivityView(vm: dashboardVM)
+//
+//                            buttonView()
+
+                            if let mtdData = dashboardVM.MTD?.data?.first {
+                                MTDView(data: mtdData)
+                            }
+
+//                            RecentActivityView(
+//                                activities: dashboardVM.recentActivity?.data ?? []
+//                            )
+                        }
+                        .padding(.bottom, 20)
+                    }
                 }
                 .padding(.horizontal)
             }
+            .navigationDestination(isPresented: $showSettings) {
+                SettingsView()
+            }
             .task {
-                await vm.fetchProfileImage(fileName: SessionManager.shared.ProfilePicString)
+                await vm.fetchProfileImage(
+                    fileName: SessionManager.shared.ProfilePicString
+                )
+
                 await dashboardVM.getSecondarySales(Type: 1)
                 await dashboardVM.getSecondarySales(Type: 2)
                 await dashboardVM.getMTD()
+                await dashboardVM.getRecentActivity()
             }
         }
     }
 }
 
 struct RecentActivityView: View {
+    
+    let activities: [RecentActivityData]
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             
@@ -105,33 +146,51 @@ struct RecentActivityView: View {
                 .font(.poppinsSemiBold(16))
                 .foregroundColor(.appBlack)
             
-            VStack(spacing: 0) {
-                RecentActivityList()
-            }
+            RecentActivityList(activities: activities)
         }
     }
 }
 
 struct RecentActivityList: View {
+    
+    let activities: [RecentActivityData]
+    
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                ImageV(name: "OrderTaken", type: .assetName)
-                    .padding(5)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 1)
-                            .stroke(Color.gray, lineWidth: 1)
-                    )
+            
+            ForEach(activities) { activity in
                 
-                VStack(spacing: 5) {
-                    Text("Recent Activity")
-                        .font(.poppinsSemiBold(13))
-                        .foregroundColor(.appBlack)
+                HStack {
                     
-                    Text("Recent Activity")
-                        .font(.poppinsMedium(13))
+                    ImageV(name: "OrderTaken", type: .assetName)
+                        .padding(5)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 1)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
+                    
+                    VStack(alignment: .leading, spacing: 5) {
+                        
+                        Text(activity.Title ?? "--")
+                            .font(.poppinsSemiBold(13))
+                            .foregroundColor(.appBlack)
+                        
+                        Text(activity.Date ?? "--")
+                            .font(.poppinsMedium(13))
+                            .foregroundColor(.gray)
+                    }
+                    
+                    Spacer()
+                    
+                    Text(String(format: "%.2f", Double(activity.Amount ?? 0)))
+                        .font(.poppinsSemiBold(13))
                         .foregroundColor(.gray)
                 }
+                .padding(.vertical, 8)
+                
+                Divider()
+                    .frame(height: 0.5)
+                    .background(Color.secondary)
             }
         }
     }
