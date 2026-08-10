@@ -72,7 +72,7 @@ class AuthenticationViewModel: ObservableObject {
             "divisionCode": SessionManager.shared.divisionCode,
             "srtEndNd": 0,
             "day": 0,
-            "time": "10:30",
+            "time": "",
             "latitude": latitude,
             "longitude": longitude,
             "remarks": "",
@@ -93,8 +93,9 @@ class AuthenticationViewModel: ObservableObject {
         ]
         
         do {
-            let response : logoutData = try await NetworkManager.shared.postJSON(urlString: url, parameters: parameters, responseType: logoutData.self
+            let response : logoutData = try await NetworkManager.shared.postTokenJSON(urlString: url, parameters: parameters, responseType: logoutData.self
             )
+        
             self.logout = response
             self.showSaveSuccessAlert = true
             self.saveSuccessMessage = response.message ?? "Logout Successfully"
@@ -208,6 +209,58 @@ class AuthenticationViewModel: ObservableObject {
         catch {
             print(error)
         }
+    }
+    
+    func postTokenJSON<T: Decodable>(
+        urlString: String,
+        parameters: [String: Any],
+        responseType: T.Type
+    ) async throws -> T {
+
+        guard let url = URL(string: urlString) else {
+            throw URLError(.badURL)
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        // Add JWT Token
+        if let token = UserDefaults.standard.string(forKey: "jwt_Token") {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            print("Authorization: Bearer \(token)")
+        } else {
+            print("JWT Token not found")
+        }
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
+
+        print("Request URL:", urlString)
+
+        if let body = request.httpBody,
+           let json = String(data: body, encoding: .utf8) {
+            print("Request Body:", json)
+        }
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+
+        print("Status Code:", httpResponse.statusCode)
+
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("Response:", responseString)
+        }
+
+        guard 200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.badServerResponse)
+        }
+
+        return try JSONDecoder().decode(T.self, from: data)
     }
     
     func fetchImage(fileName: String) async {
