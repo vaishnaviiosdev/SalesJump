@@ -43,6 +43,7 @@ class AuthenticationViewModel: ObservableObject {
             self.showSaveSuccessAlert = true
             self.saveSuccessMessage = response.message ?? "Login Successfully"
             
+            print(response)
             
             UserDefaults.standard.set(response.response?.SF_Code ?? "", forKey: "Sf_code")
             UserDefaults.standard.set(response.response?.SF_Name ?? "", forKey: "Sf_Name")

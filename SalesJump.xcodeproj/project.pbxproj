@@ -32,6 +32,10 @@
 		388C567F3019D204002C252C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C567E3019D204002C252C /* SettingsView.swift */; };
 		388C569D301A0BDA002C252C /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569C301A0BD1002C252C /* CoreDataManager.swift */; };
 		388C569F301A1D49002C252C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569E301A1D42002C252C /* SessionManager.swift */; };
+		38FC7836302AF954000444EA /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FC7835302AF954000444EA /* MenuView.swift */; };
+		38FC7838302B14D1000444EA /* MasterSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FC7837302B14D1000444EA /* MasterSyncView.swift */; };
+		38FC783B302B1520000444EA /* MasterSyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FC783A302B1520000444EA /* MasterSyncViewModel.swift */; };
+		38FC783D302B152B000444EA /* MasterSyncModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FC783C302B152B000444EA /* MasterSyncModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +65,10 @@
 		388C567E3019D204002C252C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		388C569C301A0BD1002C252C /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		388C569E301A1D42002C252C /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		38FC7835302AF954000444EA /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		38FC7837302B14D1000444EA /* MasterSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterSyncView.swift; sourceTree = "<group>"; };
+		38FC783A302B1520000444EA /* MasterSyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterSyncViewModel.swift; sourceTree = "<group>"; };
+		38FC783C302B152B000444EA /* MasterSyncModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterSyncModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -98,6 +106,8 @@
 		386C568030171FC90066DC31 = {
 			isa = PBXGroup;
 			children = (
+				38FC7839302B150A000444EA /* MasterSync */,
+				38FC7832302AED3B000444EA /* Menu */,
 				3880E0143018C62F00075E50 /* Services */,
 				386C56B73017307A0066DC31 /* Common */,
 				386C56AC30172BBD0066DC31 /* Fonts */,
@@ -224,6 +234,24 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		38FC7832302AED3B000444EA /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				38FC7835302AF954000444EA /* MenuView.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		38FC7839302B150A000444EA /* MasterSync */ = {
+			isa = PBXGroup;
+			children = (
+				38FC7837302B14D1000444EA /* MasterSyncView.swift */,
+				38FC783A302B1520000444EA /* MasterSyncViewModel.swift */,
+				38FC783C302B152B000444EA /* MasterSyncModel.swift */,
+			);
+			path = MasterSync;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -307,10 +335,14 @@
 				386C56C1301739210066DC31 /* Common.swift in Sources */,
 				3881C99A3021F9A300369C3E /* ChangePwdView.swift in Sources */,
 				3881C9983021EE5A00369C3E /* demoView.swift in Sources */,
+				38FC783D302B152B000444EA /* MasterSyncModel.swift in Sources */,
+				38FC7836302AF954000444EA /* MenuView.swift in Sources */,
 				3880E0113018B66300075E50 /* AuthenticationModel.swift in Sources */,
 				386C56B9301734350066DC31 /* Helper.swift in Sources */,
 				387443D93024823B008EFC66 /* PermissionManager.swift in Sources */,
 				386C56C330174F020066DC31 /* LoginView.swift in Sources */,
+				38FC7838302B14D1000444EA /* MasterSyncView.swift in Sources */,
+				38FC783B302B1520000444EA /* MasterSyncViewModel.swift in Sources */,
 				387443D730247C00008EFC66 /* LocationViewModel.swift in Sources */,
 				387A87913025ABE300B533FB /* DashboardView.swift in Sources */,
 				3880E0133018B67400075E50 /* AuthenticationViewModel.swift in Sources */,
