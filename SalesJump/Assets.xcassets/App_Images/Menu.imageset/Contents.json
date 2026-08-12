@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Menu (1).png",
+      "filename" : "Menu.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -17,8 +17,5 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "template-rendering-intent" : "template"
   }
 }
