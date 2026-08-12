@@ -74,7 +74,7 @@ struct RootView: View {
                 LoginView()
                 
             case .dashboard:
-                DashboardView()
+                TabbarView()
                 
             
             }
