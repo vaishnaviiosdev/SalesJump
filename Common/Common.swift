@@ -138,3 +138,41 @@ struct dismissBackButton: View {
         }
     }
 }
+
+struct searchTxtfield: View {
+    @Binding var searchTxt: String
+    var onSearch: (String) -> Void
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.secondary)
+                .fontWeight(.bold)
+            
+            Spacer()
+            
+            TextField(
+                "",
+                text: $searchTxt,
+                prompt: Text("Search")
+                    .foregroundColor(.gray)
+            )
+            .font(.system(size: 17, weight: .medium))
+            .foregroundColor(.black)
+            .textFieldStyle(PlainTextFieldStyle())
+            .padding(.vertical, 8)
+            .autocorrectionDisabled(true)
+            .onChange(of: searchTxt) { newValue in
+                onSearch(newValue)
+            }
+        }
+        .padding(.horizontal, 12)
+        .background(Color.white)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.gray.opacity(0.8), lineWidth: 1)
+        )
+        .padding(.horizontal, 8)
+        .padding(.vertical, 10)
+    }
+}

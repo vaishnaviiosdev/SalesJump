@@ -29,6 +29,8 @@
 		3880E01B3018D5D400075E50 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3880E01A3018D5CE00075E50 /* Constant.swift */; };
 		3881C9983021EE5A00369C3E /* demoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3881C9973021EE5A00369C3E /* demoView.swift */; };
 		3881C99A3021F9A300369C3E /* ChangePwdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3881C9993021F9A300369C3E /* ChangePwdView.swift */; };
+		3884265A302ADB10002943B9 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38842659302ADB10002943B9 /* TabBarView.swift */; };
+		3884265D302AF4B6002943B9 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3884265C302AF4B6002943B9 /* MenuView.swift */; };
 		388C567F3019D204002C252C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C567E3019D204002C252C /* SettingsView.swift */; };
 		388C569D301A0BDA002C252C /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569C301A0BD1002C252C /* CoreDataManager.swift */; };
 		388C569F301A1D49002C252C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569E301A1D42002C252C /* SessionManager.swift */; };
@@ -58,6 +60,8 @@
 		3880E01A3018D5CE00075E50 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		3881C9973021EE5A00369C3E /* demoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demoView.swift; sourceTree = "<group>"; };
 		3881C9993021F9A300369C3E /* ChangePwdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePwdView.swift; sourceTree = "<group>"; };
+		38842659302ADB10002943B9 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		3884265C302AF4B6002943B9 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		388C567E3019D204002C252C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		388C569C301A0BD1002C252C /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		388C569E301A1D42002C252C /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
@@ -136,7 +140,8 @@
 		386C56A2301721130066DC31 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				386C56A9301726690066DC31 /* Dashboard */,
+				3884265B302AF48C002943B9 /* Menu */,
+				386C56A9301726690066DC31 /* Home */,
 				386C56A4301721330066DC31 /* Authentication */,
 			);
 			path = View;
@@ -158,6 +163,7 @@
 				388C567E3019D204002C252C /* SettingsView.swift */,
 				3881C9973021EE5A00369C3E /* demoView.swift */,
 				3881C9993021F9A300369C3E /* ChangePwdView.swift */,
+				38842659302ADB10002943B9 /* TabBarView.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -180,12 +186,12 @@
 			path = Authentication;
 			sourceTree = "<group>";
 		};
-		386C56A9301726690066DC31 /* Dashboard */ = {
+		386C56A9301726690066DC31 /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				387A87903025ABE300B533FB /* DashboardView.swift */,
 			);
-			path = Dashboard;
+			path = Home;
 			sourceTree = "<group>";
 		};
 		386C56AC30172BBD0066DC31 /* Fonts */ = {
@@ -222,6 +228,14 @@
 				3880E0163018CB9B00075E50 /* NetworkManager.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		3884265B302AF48C002943B9 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				3884265C302AF4B6002943B9 /* MenuView.swift */,
+			);
+			path = Menu;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,6 +322,8 @@
 				3881C99A3021F9A300369C3E /* ChangePwdView.swift in Sources */,
 				3881C9983021EE5A00369C3E /* demoView.swift in Sources */,
 				3880E0113018B66300075E50 /* AuthenticationModel.swift in Sources */,
+				3884265D302AF4B6002943B9 /* MenuView.swift in Sources */,
+				3884265A302ADB10002943B9 /* TabBarView.swift in Sources */,
 				386C56B9301734350066DC31 /* Helper.swift in Sources */,
 				387443D93024823B008EFC66 /* PermissionManager.swift in Sources */,
 				386C56C330174F020066DC31 /* LoginView.swift in Sources */,
