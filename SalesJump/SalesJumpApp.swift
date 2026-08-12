@@ -74,9 +74,7 @@ struct RootView: View {
                 LoginView()
                 
             case .dashboard:
-                TabbarView()
-                
-            
+                BottomTabBar()
             }
         }
         .id(router.root)

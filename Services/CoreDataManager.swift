@@ -63,3 +63,30 @@ final class CoreDataManager {
 //    }
 
 }
+class CoreDataStack {
+    
+    static let shared = CoreDataStack()
+    
+    private init() {}
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "SalesJump")
+        container.loadPersistentStores { storeDescription, error in
+            if let error = error as NSError? {
+                fatalError("error \(error), \(error.userInfo)")
+            }
+        }
+        container.viewContext.automaticallyMergesChangesFromParent = true
+        return container
+    }()
+    
+    var viewContext: NSManagedObjectContext {
+        persistentContainer.viewContext
+    }
+    
+    func newBackgroundContext() -> NSManagedObjectContext {
+        let context = persistentContainer.newBackgroundContext()
+        context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        return context
+    }
+}

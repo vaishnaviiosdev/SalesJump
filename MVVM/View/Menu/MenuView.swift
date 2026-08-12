@@ -23,6 +23,7 @@ struct MenuView: View {
 
     @State private var searchTxt = ""
     @State private var selectedMenu: MenuItem?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     let menuItems: [MenuItem] = [
 
@@ -294,8 +295,68 @@ struct MenuView: View {
                         )
                         .padding(.bottom, 120)
                     }
+                    
+                    Spacer()
+                    
+                    HStack{
+                        Spacer()
+                        
+                        Text("Submitted Calls")
+                            .font(.poppinsMedium(14))
+                            .frame(
+                                maxWidth: horizontalSizeClass == .regular ? .infinity : nil
+                            )
+                            .frame(height: 40)
+                            .padding(.horizontal,14)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(.gray, lineWidth: 0.5)
+                            )
+                            .contentShape(Rectangle())
+                        Spacer()
+                        NavigationLink {
+                            MasterSyncView()
+                        } label: {
+
+                        Text("Master Sync")
+                            .font(.poppinsMedium(14))
+                            .frame(
+                                maxWidth: horizontalSizeClass == .regular ? .infinity : nil
+                            )
+                            .frame(height: 40)
+                            .padding(.horizontal,14)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(.gray, lineWidth: 0.5)
+                            )
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                           
+                        Spacer()
+                        Text("Outbox")
+                            .font(.poppinsMedium(14))
+                            .frame(
+                                maxWidth: horizontalSizeClass == .regular ? .infinity : nil
+                            )
+                            .frame(height: 40)
+                            .padding(.horizontal,14)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(.gray, lineWidth: 0.5)
+                            )
+                            .contentShape(Rectangle())
+                        Spacer()
+                        
+                    }.frame(maxWidth: .infinity)
+                        .frame(height: 67)
+                        .overlay(
+                            TopRoundedRectangle(radius: 12)
+                                .stroke(Color.gray.opacity(0.5), lineWidth: 0.5)
+                        )
+
                 }
-                bottomButtons
+              
             }
             .navigationDestination(for: MenuRoute.self) { route in
 

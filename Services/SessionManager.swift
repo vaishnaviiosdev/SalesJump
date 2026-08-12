@@ -38,4 +38,11 @@ final class SessionManager {
     var Desig_Code: String {
         UserDefaults.standard.string(forKey: "Desig_Code") ?? ""
     }
+    var State_Code: String {
+        UserDefaults.standard.string(forKey: "State_Code") ?? ""
+    }
+    
+    var JWT_Token: String {
+        UserDefaults.standard.string(forKey: "jwt_Token") ?? ""
+    }
 }

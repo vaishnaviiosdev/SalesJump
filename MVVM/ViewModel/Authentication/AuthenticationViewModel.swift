@@ -52,6 +52,7 @@ class AuthenticationViewModel: ObservableObject {
             UserDefaults.standard.set(response.response?.ProfilePic ?? "", forKey: "Profile_Pic")
             UserDefaults.standard.set(response.response?.Division_Code ?? "", forKey: "division_Code")
             UserDefaults.standard.set(response.response?.IsDayEnd ?? "", forKey: "isDay_End")
+            UserDefaults.standard.set(response.response?.State_Code ?? "", forKey: "State_Code")
             UserDefaults.standard.set(true, forKey: "User_Login")
             
             loginSuccess = true
