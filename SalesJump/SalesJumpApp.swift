@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CoreData
+internal import CoreData
 import Combine
 
 @main
@@ -17,6 +17,9 @@ struct SalesJumpApp: App {
     @StateObject private var router = AppRouter()
     @StateObject private var toastManager = ToastManager()
 
+    init() {
+        APIClient.shared.Url = "\(SessionManager.shared.BaseUrl)api/\(SessionManager.shared.senderId)/"
+       }
     var body: some Scene {
         WindowGroup {
             RootView()

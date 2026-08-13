@@ -5,7 +5,7 @@
 //  Created by San eforce on 29/07/26.
 //
 
-import CoreData
+internal import CoreData
 
 final class CoreDataManager {
 
