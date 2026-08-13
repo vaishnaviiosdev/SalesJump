@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+internal import CoreData
 
 @MainActor
 class AuthenticationViewModel: ObservableObject {
@@ -35,14 +36,26 @@ class AuthenticationViewModel: ObservableObject {
             "latitude": "",
             "longitude": ""
         ]
+        var BaseUrl = "https://app.salesjump.in/api/"
+        
+        let lowercasedUsername = username.lowercased()
+
+        if lowercasedUsername.contains("sjqa") || lowercasedUsername.contains("sjdev") {
+            BaseUrl = "http://sjapi.salesjump.in/api/"
+        }
         
         do {
-            let response: LoginModel = try await NetworkManager.shared.postJSON(urlString: login_Url, parameters: parameters, responseType: LoginModel.self
+            let response: LoginModel = try await NetworkManager.shared.postJSON(urlString: "\(BaseUrl)login", parameters: parameters, responseType: LoginModel.self
             )
+            
+            print(response)
             self.loginData = response
             self.showSaveSuccessAlert = true
             self.saveSuccessMessage = response.message ?? "Login Successfully"
             
+            guard response.success ?? false else {
+                return
+            }
             
             UserDefaults.standard.set(response.response?.SF_Code ?? "", forKey: "Sf_code")
             UserDefaults.standard.set(response.response?.SF_Name ?? "", forKey: "Sf_Name")
@@ -53,7 +66,15 @@ class AuthenticationViewModel: ObservableObject {
             UserDefaults.standard.set(response.response?.Division_Code ?? "", forKey: "division_Code")
             UserDefaults.standard.set(response.response?.IsDayEnd ?? "", forKey: "isDay_End")
             UserDefaults.standard.set(response.response?.State_Code ?? "", forKey: "State_Code")
+            UserDefaults.standard.set(response.response?.BaseUrl ?? "", forKey: "BaseUrl")
+            UserDefaults.standard.set(response.response?.ServerPath ?? "", forKey: "ServerPath")
             UserDefaults.standard.set(true, forKey: "User_Login")
+            
+            APIClient.shared.Url = "\(response.response?.BaseUrl ?? "")api/\(response.response?.SenderId ?? "")/"
+            
+            
+           await GetMyDayPlaneDetils()
+            await geAppSetUp()
             
             loginSuccess = true
         }
@@ -359,4 +380,237 @@ class AuthenticationViewModel: ObservableObject {
             self.saveSuccessMessage = error.localizedDescription
         }
     }
+    
+    
+    func GetMyDayPlaneDetils() async {
+        
+        var components = URLComponents(string:"\(APIClient.shared.Url)getmydayplan")!
+        components.queryItems = [
+            URLQueryItem(name: "sfCode", value:SessionManager.shared.sfCode)
+        ]
+        guard let url = components.url else { return  }
+        print(url)
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(SessionManager.shared.JWT_Token)", forHTTPHeaderField: "Authorization")
+        
+        do {
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid Response")
+                return
+            }
+
+            guard (200...299).contains(httpResponse.statusCode) else {
+                print("Status Code:", httpResponse.statusCode)
+                print("Bad response")
+                return
+            }
+            
+            guard !data.isEmpty else {
+                print("No Data")
+                return
+            }
+            
+            let result = try JSONDecoder().decode(MyDayPlanResponse.self,from: data)
+            
+            print(result)
+            
+            guard let plan = result.response else {
+                return
+            }
+            await saveDayPlan(plan: plan,isMyDayPlan: result.isMyDayPlan ?? false)
+            
+        } catch {
+            
+            print("API failed: \(error.localizedDescription)")
+        }
+
+        
+    }
+    
+    
+    func saveDayPlan(plan: DayPlanResponse,isMyDayPlan: Bool) async {
+
+        let context = CoreDataStack.shared.newBackgroundContext()
+
+        do {
+
+            let request: NSFetchRequest<MyDayPlanEntity> =
+                MyDayPlanEntity.fetchRequest()
+
+            let oldData = try context.fetch(request)
+
+            oldData.forEach { context.delete($0) }
+
+            let entity = MyDayPlanEntity(context: context)
+
+            entity.sF_Code = plan.sF_Code
+            entity.pln_date = plan.pln_date
+            entity.datewithtime = plan.datewithtime
+            entity.worktype = plan.worktype
+            entity.worktypeName = plan.worktypeName
+            entity.workTypeFlag = plan.workTypeFlag
+            entity.sf_member_code = plan.sf_member_code
+
+            entity.routeCode = plan.routeCode
+            entity.routeName = plan.routeName
+            entity.remarks = plan.remarks
+
+            entity.division_Code = plan.division_Code
+            entity.date = plan.date
+
+            entity.distributorId = plan.distributorId
+            entity.distributorName = plan.distributorName
+
+            entity.hqCode = plan.hqCode
+            entity.hqName = plan.hqName
+
+            entity.sprstk = plan.sprstk
+            entity.place_Inv = plan.place_Inv
+
+            entity.plnDate = plan.plnDate
+
+            entity.isMyDayPlan = isMyDayPlan
+
+            // Transformable Fields
+            entity.jointWorkList = (try? JSONEncoder().encode(plan.jointWorkList)) as Data? as NSObject?
+
+            entity.retailerList = (try? JSONEncoder().encode(plan.retailerList)) as Data? as NSObject?
+
+            entity.locationList = (try? JSONEncoder().encode(plan.locationList)) as Data? as NSObject?
+
+   
+
+            try context.save()
+
+            print("DayPlan Saved Successfully")
+            
+            let request1: NSFetchRequest<MyDayPlanEntity> = MyDayPlanEntity.fetchRequest()
+
+            let records = try context.fetch(request1)
+
+            print("📦 Total Records: \(records.count)")
+            print(records)
+            
+            if let plan = records.first {
+
+                if let data = plan.jointWorkList as? Data {
+
+                    let jointWorks = try? JSONDecoder().decode(
+                        [JointWork].self,
+                        from: data
+                    )
+
+                    print(jointWorks ?? [])
+                }
+                
+                
+                if let data = plan.retailerList as? Data {
+
+                    let retailers = try? JSONDecoder().decode(
+                        [Retailer].self,
+                        from: data
+                    )
+
+                    print(retailers ?? [])
+
+                    retailers?.forEach {
+                        print($0.name ?? "")
+                    }
+                }
+                
+                
+                
+                if let data = plan.locationList as? Data {
+
+                    let locations = try? JSONDecoder().decode(
+                        [Location].self,
+                        from: data
+                    )
+
+                    print(locations ?? [])
+                }
+                
+            }
+
+        } catch {
+
+            print("Core Data Save Error: \(error)")
+        }
+    }
+    
+    
+    func geAppSetUp() async{
+       
+        var components = URLComponents(string:"\(APIClient.shared.Url)getsetup")!
+        components.queryItems = [
+            URLQueryItem(name: "sfCode", value:SessionManager.shared.sfCode)
+        ]
+        guard let url = components.url else { return  }
+        print(url)
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(SessionManager.shared.JWT_Token)", forHTTPHeaderField: "Authorization")
+        
+        
+        do {
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid Response")
+                return
+            }
+
+            guard (200...299).contains(httpResponse.statusCode) else {
+                print("Status Code:", httpResponse.statusCode)
+                print("Bad response")
+                return
+            }
+            
+            guard !data.isEmpty else {
+                print("No Data")
+                return
+            }
+            
+            let result = try JSONDecoder().decode(AppSetupResponse.self,from: data)
+            
+            let context = CoreDataStack.shared.newBackgroundContext()
+            let entity = AppSetupEntity(context: context)
+
+            guard let setup = result.data?.first else {
+                return
+            }
+
+            entity.sfCode = setup.SF_Code
+            entity.setupData = try JSONEncoder().encode(setup)
+            entity.lastUpdated = Date()
+
+            try context.save()
+        
+            if let data = entity.setupData {
+
+                let setup = try? JSONDecoder().decode(
+                    AppSetupData.self,
+                    from: data
+                )
+
+                print(setup?.GEOTagNeed ?? "")
+                print(setup?.beat_optimization_need ?? "")
+                print(setup)
+            }
+           
+            
+        } catch {
+            
+            print("API failed: \(error.localizedDescription)")
+        }
+
+        
+    }
+    
 }
+

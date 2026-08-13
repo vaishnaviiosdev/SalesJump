@@ -19,6 +19,7 @@ struct MasterSync: Codable {
     var isLoading:Bool
     var Count:Int
     var ShowContandLoading:Bool
+    var error:Bool
     
 }
 

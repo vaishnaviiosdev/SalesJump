@@ -1,7 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24512" systemVersion="25G76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AppSetupEntity" representedClassName="AppSetupEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="setupData" optional="YES" attributeType="Binary"/>
+        <attribute name="sfCode" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="MyDayPlanEntity" representedClassName="MyDayPlanEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="String"/>
+        <attribute name="datewithtime" optional="YES" attributeType="String"/>
+        <attribute name="dcrtype" optional="YES" attributeType="String"/>
+        <attribute name="distributorId" optional="YES" attributeType="String"/>
+        <attribute name="distributorName" optional="YES" attributeType="String"/>
+        <attribute name="division_Code" optional="YES" attributeType="String"/>
+        <attribute name="hqCode" optional="YES" attributeType="String"/>
+        <attribute name="hqName" optional="YES" attributeType="String"/>
+        <attribute name="isMyDayPlan" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="jointWorkList" optional="YES" attributeType="Transformable"/>
+        <attribute name="locationList" optional="YES" attributeType="Transformable"/>
+        <attribute name="place_Inv" optional="YES" attributeType="String"/>
+        <attribute name="pln_date" optional="YES" attributeType="String"/>
+        <attribute name="plnDate" optional="YES" attributeType="String"/>
+        <attribute name="remarks" optional="YES" attributeType="String"/>
+        <attribute name="retailerList" optional="YES" attributeType="Transformable"/>
+        <attribute name="routeCode" optional="YES" attributeType="String"/>
+        <attribute name="routeName" optional="YES" attributeType="String"/>
+        <attribute name="sF_Code" optional="YES" attributeType="String"/>
+        <attribute name="sf_member_code" optional="YES" attributeType="String"/>
+        <attribute name="sprstk" optional="YES" attributeType="String"/>
+        <attribute name="tpList" optional="YES" attributeType="Transformable"/>
+        <attribute name="worktype" optional="YES" attributeType="String"/>
+        <attribute name="workTypeFlag" optional="YES" attributeType="String"/>
+        <attribute name="worktypeName" optional="YES" attributeType="String"/>
     </entity>
     <entity name="RetailerEntity" representedClassName="RetailerEntity" syncable="YES" codeGenerationType="class">
         <attribute name="addrs" optional="YES" attributeType="String"/>

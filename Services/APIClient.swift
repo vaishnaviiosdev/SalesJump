@@ -12,7 +12,6 @@ class APIClient {
     
     var qaUrl: String = "http://sjapi.salesjump.in/"
     var devUrl: String = "http://rapi.salesjump.in/"
-    
-    
-    
+    var Url: String = "https://app.salesjump.in/api/"
+
 }

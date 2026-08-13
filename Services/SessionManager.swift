@@ -45,4 +45,11 @@ final class SessionManager {
     var JWT_Token: String {
         UserDefaults.standard.string(forKey: "jwt_Token") ?? ""
     }
+    var BaseUrl: String {
+        UserDefaults.standard.string(forKey: "BaseUrl") ?? ""
+    }
+    
+    var ServerPath: String {
+        UserDefaults.standard.string(forKey: "ServerPath") ?? ""
+    }
 }

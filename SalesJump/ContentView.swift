@@ -5,7 +5,7 @@
 //  Created by San eforce on 27/07/26.
 
 import SwiftUI
-import CoreData
+internal import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext

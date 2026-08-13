@@ -5,7 +5,7 @@
 //  Created by San eforce on 27/07/26.
 //
 
-import CoreData
+internal import CoreData
 import CoreTransferable
 
 struct PersistenceController {

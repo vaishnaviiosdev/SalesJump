@@ -106,23 +106,37 @@ struct MasterSyncView: View {
                                                     RoundedRectangle(cornerRadius: 4)
                                                 )
                                         )
+                                        .contentTransition(.numericText())
+                                        .animation(
+                                            .easeOut(duration: 0.8),
+                                            value: item.Count
+                                        )
                                     
-                                    
-                                    Image("Reload")
-                                        .resizable()
-                                        .renderingMode(.template)
-                                        .frame(width: 16, height: 16)
-                                        .foregroundStyle(Color.appPrimary)
-                                    
-                                        .rotationEffect(
-                                                  .degrees(item.isLoading ? 360 : 0)
-                                              )
-                                              .animation(
-                                                  item.isLoading
-                                                  ? .linear(duration: 1).repeatForever(autoreverses: false)
-                                                  : .default,
-                                                  value: item.isLoading
-                                              )
+                                    if item.error{
+                                        TimelineView(.animation) { context in
+                                        Image("caution")
+                                            .resizable()
+                                            .frame(width: 24, height: 24)
+                                            
+                                    }
+                                    }else{
+                                    TimelineView(.animation) { context in
+                                        
+                                        Image("Reload")
+                                            .resizable()
+                                            .renderingMode(.template)
+                                            .frame(width: 16, height: 16)
+                                            .foregroundStyle(Color.appPrimary)
+                                            .rotationEffect(
+                                                .degrees(
+                                                    item.isLoading
+                                                    ? context.date.timeIntervalSinceReferenceDate
+                                                        .truncatingRemainder(dividingBy: 1) * 360
+                                                    : 0
+                                                )
+                                            )
+                                    }
+                                }
                                     
                                 }
                                   
@@ -154,45 +168,6 @@ struct MasterSyncView: View {
                 Spacer()
             }
             
-            
-//            if showMenu {
-//                HStack{
-//                    Spacer()
-//                VStack(alignment: .leading, spacing: 0) {
-//
-//                    Button {
-//                        showMenu = false
-//                    } label: {
-//                        Text("Sync all")
-//                            .font(.poppinsMedium(14))
-//                            .foregroundColor(.primary)
-//                            .frame(width: 140, height: 45, alignment: .leading)
-//                            .padding(.horizontal, 12)
-//                    }
-//
-//                    Divider()
-//
-//                    Button {
-//                        showMenu = false
-//                    } label: {
-//                        Text("Clear Data")
-//                            .font(.poppinsMedium(14))
-//                            .foregroundColor(.primary)
-//                            .frame(width: 140, height: 45, alignment: .leading)
-//                            .padding(.horizontal, 12)
-//                    }
-//                }
-//                .background(Color.white)
-//                .cornerRadius(8)
-//                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
-//                .frame( maxHeight: .infinity, alignment: .topTrailing)
-//                .frame(width: 100,alignment: .trailing)
-//                .padding(.top, 90)
-//                .padding(.trailing, 20)
-//                .transition(.opacity)
-//                .zIndex(1000)
-//            }
-//            }
 
         }.navigationBarBackButtonHidden(true)
             .ignoresSafeArea(.all)
@@ -239,8 +214,4 @@ struct MasterSyncView: View {
             }
         }
     }
-}
-
-#Preview {
-    MasterSyncView()
 }
