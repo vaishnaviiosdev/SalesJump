@@ -52,4 +52,7 @@ final class SessionManager {
     var ServerPath: String {
         UserDefaults.standard.string(forKey: "ServerPath") ?? ""
     }
+    var SF_Type: String {
+        UserDefaults.standard.string(forKey: "SF_Type") ?? ""
+    }
 }

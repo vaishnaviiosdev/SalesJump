@@ -19,6 +19,8 @@ struct SalesJumpApp: App {
 
     init() {
         APIClient.shared.Url = "\(SessionManager.shared.BaseUrl)api/\(SessionManager.shared.senderId)/"
+        
+        UserSetup.shared.fetchSetup()
        }
     var body: some Scene {
         WindowGroup {
@@ -35,6 +37,7 @@ class AppRouter: ObservableObject {
 
     enum RootView {
         case welcome
+        case MasterSync
         case dashboard
     }
 
@@ -52,6 +55,12 @@ class AppRouter: ObservableObject {
     }
 
     func loginSuccess() {
+        isLoggedIn = true
+       // root = .dashboard
+        root = .MasterSync
+    }
+    
+    func MasterSyncSuccess() {
         isLoggedIn = true
         root = .dashboard
     }
@@ -78,6 +87,9 @@ struct RootView: View {
                 
             case .dashboard:
                 BottomTabBar()
+                
+            case .MasterSync:
+                MasterSyncView(isLogin: true)
             }
         }
         .id(router.root)

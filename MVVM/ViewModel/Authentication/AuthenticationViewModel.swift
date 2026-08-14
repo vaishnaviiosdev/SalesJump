@@ -56,7 +56,7 @@ class AuthenticationViewModel: ObservableObject {
             guard response.success ?? false else {
                 return
             }
-            
+            print(response)
             UserDefaults.standard.set(response.response?.SF_Code ?? "", forKey: "Sf_code")
             UserDefaults.standard.set(response.response?.SF_Name ?? "", forKey: "Sf_Name")
             UserDefaults.standard.set(response.response?.Desig_Code ?? "", forKey: "Desig_Code")
@@ -68,15 +68,20 @@ class AuthenticationViewModel: ObservableObject {
             UserDefaults.standard.set(response.response?.State_Code ?? "", forKey: "State_Code")
             UserDefaults.standard.set(response.response?.BaseUrl ?? "", forKey: "BaseUrl")
             UserDefaults.standard.set(response.response?.ServerPath ?? "", forKey: "ServerPath")
+            UserDefaults.standard.set(response.response?.SF_Type ?? "", forKey: "SF_Type")
             UserDefaults.standard.set(true, forKey: "User_Login")
             
             APIClient.shared.Url = "\(response.response?.BaseUrl ?? "")api/\(response.response?.SenderId ?? "")/"
             
             
-           await GetMyDayPlaneDetils()
-            await geAppSetUp()
-            
-            loginSuccess = true
+            Task {
+                async let myDayPlan: () = GetMyDayPlaneDetils()
+                async let appSetup: () = geAppSetUp()
+                await myDayPlan
+                await appSetup
+                UserSetup.shared.fetchSetup()
+                loginSuccess = true
+            }
         }
         catch {
             self.saveSuccessMessage = error.localizedDescription
@@ -395,152 +400,38 @@ class AuthenticationViewModel: ObservableObject {
         request.setValue("Bearer \(SessionManager.shared.JWT_Token)", forHTTPHeaderField: "Authorization")
         
         do {
-            
             let (data, response) = try await URLSession.shared.data(for: request)
-            
             guard let httpResponse = response as? HTTPURLResponse else {
                 print("Invalid Response")
                 return
             }
-
             guard (200...299).contains(httpResponse.statusCode) else {
                 print("Status Code:", httpResponse.statusCode)
                 print("Bad response")
                 return
             }
-            
             guard !data.isEmpty else {
                 print("No Data")
                 return
             }
-            
             let result = try JSONDecoder().decode(MyDayPlanResponse.self,from: data)
-            
             print(result)
-            
             guard let plan = result.response else {
                 return
             }
-            await saveDayPlan(plan: plan,isMyDayPlan: result.isMyDayPlan ?? false)
+            let context = CoreDataStack.shared.newBackgroundContext()
+            let entity = MyDayPlanEntity(context: context)
+            entity.isMyDayPlan = result.isMyDayPlan ?? false
+            entity.tpList = try? JSONEncoder().encode(result.tpList)
+            entity.response =  try? JSONEncoder().encode(plan)
+            entity.lastUpdated = Date()
+            try context.save()
             
         } catch {
-            
             print("API failed: \(error.localizedDescription)")
         }
-
-        
     }
     
-    
-    func saveDayPlan(plan: DayPlanResponse,isMyDayPlan: Bool) async {
-
-        let context = CoreDataStack.shared.newBackgroundContext()
-
-        do {
-
-            let request: NSFetchRequest<MyDayPlanEntity> =
-                MyDayPlanEntity.fetchRequest()
-
-            let oldData = try context.fetch(request)
-
-            oldData.forEach { context.delete($0) }
-
-            let entity = MyDayPlanEntity(context: context)
-
-            entity.sF_Code = plan.sF_Code
-            entity.pln_date = plan.pln_date
-            entity.datewithtime = plan.datewithtime
-            entity.worktype = plan.worktype
-            entity.worktypeName = plan.worktypeName
-            entity.workTypeFlag = plan.workTypeFlag
-            entity.sf_member_code = plan.sf_member_code
-
-            entity.routeCode = plan.routeCode
-            entity.routeName = plan.routeName
-            entity.remarks = plan.remarks
-
-            entity.division_Code = plan.division_Code
-            entity.date = plan.date
-
-            entity.distributorId = plan.distributorId
-            entity.distributorName = plan.distributorName
-
-            entity.hqCode = plan.hqCode
-            entity.hqName = plan.hqName
-
-            entity.sprstk = plan.sprstk
-            entity.place_Inv = plan.place_Inv
-
-            entity.plnDate = plan.plnDate
-
-            entity.isMyDayPlan = isMyDayPlan
-
-            // Transformable Fields
-            entity.jointWorkList = (try? JSONEncoder().encode(plan.jointWorkList)) as Data? as NSObject?
-
-            entity.retailerList = (try? JSONEncoder().encode(plan.retailerList)) as Data? as NSObject?
-
-            entity.locationList = (try? JSONEncoder().encode(plan.locationList)) as Data? as NSObject?
-
-   
-
-            try context.save()
-
-            print("DayPlan Saved Successfully")
-            
-            let request1: NSFetchRequest<MyDayPlanEntity> = MyDayPlanEntity.fetchRequest()
-
-            let records = try context.fetch(request1)
-
-            print("📦 Total Records: \(records.count)")
-            print(records)
-            
-            if let plan = records.first {
-
-                if let data = plan.jointWorkList as? Data {
-
-                    let jointWorks = try? JSONDecoder().decode(
-                        [JointWork].self,
-                        from: data
-                    )
-
-                    print(jointWorks ?? [])
-                }
-                
-                
-                if let data = plan.retailerList as? Data {
-
-                    let retailers = try? JSONDecoder().decode(
-                        [Retailer].self,
-                        from: data
-                    )
-
-                    print(retailers ?? [])
-
-                    retailers?.forEach {
-                        print($0.name ?? "")
-                    }
-                }
-                
-                
-                
-                if let data = plan.locationList as? Data {
-
-                    let locations = try? JSONDecoder().decode(
-                        [Location].self,
-                        from: data
-                    )
-
-                    print(locations ?? [])
-                }
-                
-            }
-
-        } catch {
-
-            print("Core Data Save Error: \(error)")
-        }
-    }
     
     
     func geAppSetUp() async{
@@ -600,7 +491,6 @@ class AuthenticationViewModel: ObservableObject {
 
                 print(setup?.GEOTagNeed ?? "")
                 print(setup?.beat_optimization_need ?? "")
-                print(setup)
             }
            
             

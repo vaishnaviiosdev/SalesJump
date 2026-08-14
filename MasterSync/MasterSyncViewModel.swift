@@ -11,9 +11,12 @@ internal import CoreData
 @MainActor
 class MasterSyncViewModel: ObservableObject {
     
+    @Published var HeadquarterName:String = ""
+    @Published var HeadquarterID:String = ""
     @Published var MasterSyncAPI: [MasterSync] = []
-
     @Published var getHqSf_Code: String = SessionManager.shared.sfCode
+    @Published var Subordinates: [Subordinate] = []
+    @Published var AllApiCompleted: Bool = false
 
     
     init() {
@@ -88,6 +91,11 @@ class MasterSyncViewModel: ObservableObject {
     
  
     func SyncAll() async {
+        for index in MasterSyncAPI.indices {
+            MasterSyncAPI[index].ShowContandLoading = true
+            MasterSyncAPI[index].isLoading = true
+            MasterSyncAPI[index].Count = 0
+        }
         
         await withTaskGroup(of: Void.self) { group in
             
@@ -112,6 +120,9 @@ class MasterSyncViewModel: ObservableObject {
                 
             }
         }
+        await MainActor.run {
+              self.AllApiCompleted = true
+          }
     }
     
     func SyncData(Index:Int) async{
@@ -121,11 +132,7 @@ class MasterSyncViewModel: ObservableObject {
         MasterSyncAPI[Index].ShowContandLoading = true
        await CallMasterSyncAPI(Master_Name: Item.Master_Name, SF_Code: Item.SF_Code, State_Code: Item.State_Code, Division_Code: Item.Division_Code, HqSf_Code: Item.HqSf_Code, index: Index)
             
-         
-        
     }
-    
-    
     
     func CallMasterSyncAPI(Master_Name:String,SF_Code:String,State_Code:String,Division_Code:String,HqSf_Code:String,index:Int) async {
         
@@ -179,41 +186,149 @@ class MasterSyncViewModel: ObservableObject {
       
     }
     
-    
-    func saveMasterSyncData( masterName: String, data: Data) async {
-        
-        let context = CoreDataStack.shared.newBackgroundContext()
-        
-        await context.perform {
-            do {
-                switch masterName {
-                    
-                case "retailer":
-                    
-                    let items = try JSONDecoder().decode(RetailerResponse.self, from: data)
-                    let Response = items.response
-                    Response.forEach { RetailerEntity.saveOrUpdate(from: $0, context: context) }
-                    
-                default:
-                    print("No model mapped for \(masterName)")
-                    return
+    func saveMasterSyncData(masterName: String, data: Data) async {
+
+        do {
+            switch masterName {
+            case "retailer":
+                let items = try JSONDecoder().decode(RetailerResponse.self,from: data)
+                let context = CoreDataStack.shared.newBackgroundContext()
+
+                await context.perform {
+                    do {
+                        items.response.forEach {RetailerEntity.saveOrUpdate(from: $0,context: context)
+                        }
+
+                        if context.hasChanges {
+                            try context.save()
+                        }
+                    } catch {
+                        print("CoreData Save Error: \(error)")
+                    }
                 }
-            
-                try context.save()
-                print("\(masterName) synced successfully")
-                    let fetchRequest: NSFetchRequest<RetailerEntity> = RetailerEntity.fetchRequest()
-                    let count = try context.count(for: fetchRequest)
-                    print(" RetailerEntity total rows in Core Data: \(count)")
-                    let allRecords = try context.fetch(fetchRequest)
-                
-                    print(allRecords)
-                
-            } catch {
-                print("Decode/Save error for \(masterName): \(error)")
+
+            case "subordinate":
+                let items = try JSONDecoder().decode(SubordinateResponse.self,from: data)
+                let context = CoreDataStack.shared.newBackgroundContext()
+                await context.perform {
+                    do {
+                        let entity = SubordinateEntity(context: context)
+                        entity.subordinate = try JSONEncoder().encode(items.response)
+                        if context.hasChanges {
+                            try context.save()
+                        }
+                    } catch {
+                        print("CoreData Save Error: \(error)")
+                    }
+                }
+
+            default:
+                print("No model mapped for \(masterName)")
             }
+
+        } catch {
+            print("Decode Error for \(masterName): \(error)")
         }
     }
     
+
+    func fetchSubordinate() async {
+        
+        let context = CoreDataStack.shared.viewContext
+        
+        do {
+            let request: NSFetchRequest<SubordinateEntity> = SubordinateEntity.fetchRequest()
+            
+            guard let entity = try context.fetch(request).first,
+                  let data = entity.subordinate else {
+               
+                return
+            }
+            
+            let items = try JSONDecoder().decode([Subordinate].self, from: data)
+            
+            Subordinates = items
+            
+        } catch {
+            print("Fetch Error: \(error)")
+        }
+    }
+    
+    
+    func FetchMyDayplan(isLogIn:Bool) async {
+
+        let context = CoreDataStack.shared.viewContext
+
+        do {
+
+            let request: NSFetchRequest<MyDayPlanEntity> =
+                MyDayPlanEntity.fetchRequest()
+
+            guard let entity = try context.fetch(request).first else {
+                return
+            }
+
+            let plan = try? JSONDecoder().decode(DayPlanResponse.self,from: entity.response ?? Data())
+            _ = try? JSONDecoder().decode([TPItem].self,from: entity.tpList ?? Data())
+            let isMyDayPlan = entity.isMyDayPlan
+
+            
+            if isMyDayPlan{
+                HeadquarterName = plan?.hqName ?? "-"
+                for index in MasterSyncAPI.indices {
+                    
+                    if MasterSyncAPI[index].Master_Name != "quickactionsetup"  || MasterSyncAPI[index].Master_Name != "subordinate" {
+                        MasterSyncAPI[index].HqSf_Code = plan?.hqCode ?? ""
+                    }
+                    
+                }
+                
+                if isLogIn{
+                    
+                   await SyncAll()
+                    
+                }
+            }else{
+                if isLogIn{
+                    await SyncAll()
+                }
+            }
+
+        } catch {
+            print("Fetch Error: \(error)")
+        }
+    }
+    
+    
+    func ClearData() async {
+
+        let context = CoreDataStack.shared.newBackgroundContext()
+        await context.perform {
+
+            do {
+                let entityNames = [
+                    "RetailerEntity",
+                    "SubordinateEntity",
+                    "MyDayPlanEntity"
+                ]
+
+                for entityName in entityNames {
+                    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(
+                        entityName: entityName
+                    )
+                    let deleteRequest = NSBatchDeleteRequest(
+                        fetchRequest: fetchRequest
+                    )
+
+                    try context.execute(deleteRequest)
+                }
+                try context.save()
+                print("All Core Data Cleared")
+            } catch {
+                print("Clear Data Error: \(error)")
+            }
+        }
+    }
 }
 
 

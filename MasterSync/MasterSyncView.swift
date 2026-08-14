@@ -11,8 +11,14 @@ struct MasterSyncView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var showMenu = false
     @State private var isLoading = false
+    @State private var ShowBottomSheet:Bool = false
     @State private var rotation: Double = 0
+    @StateObject private var toast = Toastmanager.shared
     @StateObject var viewModel: MasterSyncViewModel = .init()
+    
+    @EnvironmentObject var router: AppRouter
+    
+    let isLogin:Bool?
 
     var body: some View {
         ZStack {
@@ -60,28 +66,42 @@ struct MasterSyncView: View {
                     .shadow(color: Color.black.opacity(0.12), radius: 3, x: 0, y: 2)
                     .padding(.top, 35)
                 
-                // Only Show Manger
+              
                 
-                
-                HStack{
-                    
-                    Text("Kanchipuram (Harris)")
-                        .font(.poppinsMedium(14))
-                        .padding(.leading,8)
-                    
-                    Spacer()
-                    
-                    Image("Down Arrow Outline")
-                        .padding(.trailing,8)
-                    
-                }.frame(height: 45)
-                    .frame(maxWidth: .infinity)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color.gray, lineWidth: 0.5)
+                if SessionManager.shared.SF_Type == "2"{
+                    HStack{
                         
-                    )
-                    .padding(.horizontal)
+                        Text(viewModel.HeadquarterName == "" ? "Select Headquarter" : viewModel.HeadquarterName)
+                            .font(.poppinsMedium(14))
+                            .foregroundStyle(viewModel.HeadquarterName == "" ? Color.gray : Color.primary)
+                            .padding(.leading,8)
+                        
+                        Spacer()
+                        
+                        Image("Down Arrow Outline")
+                            .padding(.trailing,8)
+                        
+                    }.frame(height: 45)
+                        .frame(maxWidth: .infinity)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color.gray, lineWidth: 0.5)
+                            
+                        )
+                        .padding(.horizontal)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            Task {
+                            await viewModel.fetchSubordinate()
+                                if viewModel.Subordinates.isEmpty{
+                                    Toastmanager.shared.show("No data available")
+                                    return
+                                }
+                            ShowBottomSheet = true
+                            }
+                        }
+                    
+                }
                 
                 
                 VStack {
@@ -168,9 +188,56 @@ struct MasterSyncView: View {
                 Spacer()
             }
             
+            .sheet(isPresented: $ShowBottomSheet) {
+                BottomSheet(Subordinates: $viewModel.Subordinates,HeadquarterName: $viewModel.HeadquarterName, HeadquarterID: $viewModel.getHqSf_Code)
+                           .presentationDetents([.fraction(0.8), .large])
+                           .presentationDragIndicator(.visible)
+                   }
+            
+            .onChange(of: viewModel.getHqSf_Code) { newValue in
+             
+                Task{
+                    for index in viewModel.MasterSyncAPI.indices {
+                        
+                        if viewModel.MasterSyncAPI[index].Master_Name != "quickactionsetup"  || viewModel.MasterSyncAPI[index].Master_Name != "subordinate" {
+                            viewModel.MasterSyncAPI[index].HqSf_Code = newValue
+                        }
+                            
+                    }
+                   await viewModel.SyncAll()
+                    
+                }
+            }
+            
+            .onChange(of: viewModel.AllApiCompleted){ isCompleted in
+                if isLogin == true{
+                    
+                    guard isCompleted else { return }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        router.MasterSyncSuccess()
+                    }
+                }
+            }
+            
+            .overlay {
+                if toast.isShowing {
+                    ToastView(message: toast.message)
+                        .padding(.bottom, 80)
+                        .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
+                }
+            }
 
         }.navigationBarBackButtonHidden(true)
             .ignoresSafeArea(.all)
+            .onAppear{
+              
+                Task{
+                    await viewModel.FetchMyDayplan(isLogIn: isLogin ?? false)
+                }
+                
+                
+            }
           
     }
     
@@ -180,12 +247,7 @@ struct MasterSyncView: View {
 
             Button {
                 
-                for index in viewModel.MasterSyncAPI.indices {
-                    viewModel.MasterSyncAPI[index].ShowContandLoading = true
-                    viewModel.MasterSyncAPI[index].isLoading = true
-                    viewModel.MasterSyncAPI[index].Count = 0
-                }
-                
+             
                 Task{
                    await viewModel.SyncAll()
                 }
@@ -203,6 +265,11 @@ struct MasterSyncView: View {
             Divider()
 
             Button {
+                Task{
+                   await viewModel.ClearData()
+                    router.logout()
+                }
+                
                 showMenu = false
             } label: {
                 Text("Clear Data")
@@ -214,4 +281,113 @@ struct MasterSyncView: View {
             }
         }
     }
+}
+
+
+
+struct BottomSheet : View {
+    @Environment(\.dismiss) private var dismiss
+    @State var Serch: String = ""
+    @Binding var Subordinates: [Subordinate]
+    @Binding var HeadquarterName:String
+    @Binding var HeadquarterID:String
+
+    var filteredList: [Subordinate] {
+        
+        if Serch.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return Subordinates
+        }
+        return Subordinates.filter {
+            $0.name?.localizedCaseInsensitiveContains(Serch) ?? false
+        }
+    }
+    var body: some View {
+        VStack {
+
+            VStack {
+                HStack {
+
+                    Text("Select  Headquarters")
+                        .font(.poppinsSemiBold(16))
+                        .padding(.leading,16)
+                        .padding(.bottom,16)
+                        .padding(.top,20)
+
+                    Spacer()
+
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image("Close Button")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .padding(.trailing,16)
+                            .padding(.bottom,16)
+                            .padding(.top,20)
+                    }
+                }
+                .padding(.horizontal, 10)
+
+            Rectangle()
+                    .frame(height: 0.5)
+                    .foregroundStyle(Color.gray.opacity(0.6))
+                
+            }
+           
+
+            VStack {
+
+                HStack {
+
+                    Image("search")
+                        .resizable()
+                        .frame(width: 20,height: 20).padding(.leading,8)
+
+                    TextField("Search", text: $Serch)
+                        .font(.system(size: 14, weight: .medium))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 30)
+                        .padding(.trailing, 8)
+                }
+                .frame(height: 36)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(Color.gray, lineWidth: 0.5)
+                ).padding(.horizontal,10)
+                    .padding(.top,5)
+
+        
+                ScrollView {
+                    ForEach(filteredList.indices, id: \.self) { index in
+                        let item = filteredList[index]
+
+                        HStack {
+
+                            Text(item.name ?? "")
+                                .font(.poppinsMedium(13))
+
+                            Spacer()
+                        }
+                        .frame(height: 40)
+                        .contentShape(Rectangle())
+                        .padding(.horizontal,10)
+                        .onTapGesture {
+                            let item = filteredList[index]
+                            HeadquarterName = item.name ?? "-"
+                            HeadquarterID = item.id ?? ""
+                            dismiss()
+                        }
+                        Rectangle()
+                                .frame(height: 0.5)
+                                .foregroundStyle(Color.gray.opacity(0.6))
+                    }
+                }
+                
+
+                Spacer()
+            }
+            
+        }
+    }
+    
 }
