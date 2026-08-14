@@ -315,7 +315,7 @@ struct MenuView: View {
                             .contentShape(Rectangle())
                         Spacer()
                         NavigationLink {
-                            MasterSyncView()
+                            MasterSyncView(isLogin:false)
                         } label: {
 
                         Text("Master Sync")

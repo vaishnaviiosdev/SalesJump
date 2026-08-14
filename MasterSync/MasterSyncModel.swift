@@ -15,7 +15,7 @@ struct MasterSync: Codable {
     let SF_Code:String
     let State_Code:String
     let Division_Code:String
-    let HqSf_Code:String
+    var HqSf_Code:String
     var isLoading:Bool
     var Count:Int
     var ShowContandLoading:Bool
@@ -94,5 +94,35 @@ struct Retailer: Codable, Identifiable {
         case retailerCategory = "Retailer_Category"
         case retailerClass = "Retailer_Class"
         case imageUrl
+    }
+}
+
+
+
+
+
+
+
+struct SubordinateResponse: Codable {
+    let success: Bool?
+    let message: String?
+    let dataCount: Int?
+    let masterName: String?
+    let response: [Subordinate]?
+}
+
+struct Subordinate: Codable {
+    let id: String?
+    let name: String?
+    let ownDiv: Int?
+    let divisionCode: String?
+    let sfDetail: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case ownDiv = "OwnDiv"
+        case divisionCode = "Division_Code"
+        case sfDetail = "SF_Detail"
     }
 }

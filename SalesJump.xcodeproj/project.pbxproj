@@ -37,6 +37,8 @@
 		388C567F3019D204002C252C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C567E3019D204002C252C /* SettingsView.swift */; };
 		388C569D301A0BDA002C252C /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569C301A0BD1002C252C /* CoreDataManager.swift */; };
 		388C569F301A1D49002C252C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569E301A1D42002C252C /* SessionManager.swift */; };
+		38C718FF302EDB2D0005DAD3 /* UserSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C718FE302EDB2D0005DAD3 /* UserSetup.swift */; };
+		38C7198D302F19FA0005DAD3 /* ToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C7198C302F19FA0005DAD3 /* ToastManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +73,8 @@
 		388C567E3019D204002C252C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		388C569C301A0BD1002C252C /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		388C569E301A1D42002C252C /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		38C718FE302EDB2D0005DAD3 /* UserSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSetup.swift; sourceTree = "<group>"; };
+		38C7198C302F19FA0005DAD3 /* ToastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -230,6 +234,7 @@
 				3880E01A3018D5CE00075E50 /* Constant.swift */,
 				386C56C03017391D0066DC31 /* Common.swift */,
 				386C56B8301730C50066DC31 /* Helper.swift */,
+				38C718FE302EDB2D0005DAD3 /* UserSetup.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -243,6 +248,7 @@
 				388C569C301A0BD1002C252C /* CoreDataManager.swift */,
 				3880E0183018D22800075E50 /* APIClient.swift */,
 				3880E0163018CB9B00075E50 /* NetworkManager.swift */,
+				38C7198C302F19FA0005DAD3 /* ToastManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -341,12 +347,14 @@
 				3880E0113018B66300075E50 /* AuthenticationModel.swift in Sources */,
 				3884265D302AF4B6002943B9 /* MenuView.swift in Sources */,
 				386C56B9301734350066DC31 /* Helper.swift in Sources */,
+				38C718FF302EDB2D0005DAD3 /* UserSetup.swift in Sources */,
 				387443D93024823B008EFC66 /* PermissionManager.swift in Sources */,
 				383365E6302C9AAB0054B736 /* MasterSyncModel.swift in Sources */,
 				386C56C330174F020066DC31 /* LoginView.swift in Sources */,
 				383365E2302C9A6E0054B736 /* MasterSyncView.swift in Sources */,
 				383365E4302C9A8D0054B736 /* MasterSyncViewModel.swift in Sources */,
 				387443D730247C00008EFC66 /* LocationViewModel.swift in Sources */,
+				38C7198D302F19FA0005DAD3 /* ToastManager.swift in Sources */,
 				387A87913025ABE300B533FB /* DashboardView.swift in Sources */,
 				3880E0133018B67400075E50 /* AuthenticationViewModel.swift in Sources */,
 				387A87973025CF7200B533FB /* DashboardModel.swift in Sources */,
