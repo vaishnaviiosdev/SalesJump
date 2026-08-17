@@ -17,21 +17,37 @@ struct MasterSyncView: View {
     @StateObject var viewModel: MasterSyncViewModel = .init()
     
     @EnvironmentObject var router: AppRouter
+    @Environment(\.colorScheme) var colorScheme
+    
+    private var isPad: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+    }
     
     let isLogin:Bool?
 
     var body: some View {
         ZStack {
             
-            Color(UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 1.00))
+            if colorScheme == .dark {
+                Color(.systemGroupedBackground)
+            }else{
+                
+                Color(UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 1.00))
+            }
             
             VStack {
                 
                 HStack {
                     
                     Image("Up Arrow")
+                        .renderingMode(.template)
                         .resizable()
-                        .frame(width: 24, height: 24)
+                        .scaledToFit()
+                        .frame(
+                            width: isPad ? 34 : 24,
+                            height: isPad ? 34 : 24
+                        )
+                        .foregroundStyle(.primary)
                         .rotationEffect(.degrees(-90))
                         .padding(.leading, 20)
                         .onTapGesture {
@@ -41,7 +57,7 @@ struct MasterSyncView: View {
                     Spacer()
                     
                     Text("Master Sync")
-                        .font(.poppinsMedium(16))
+                        .font(.poppinsMedium( isPad ? 18:16))
                     
                     Spacer()
                     
@@ -62,7 +78,7 @@ struct MasterSyncView: View {
                     
                 }.frame(height: 60)
                     .frame(maxWidth: .infinity)
-                    .background(Color.white)
+                    .background( colorScheme == .dark ? Color(.systemGroupedBackground): Color.white)
                     .shadow(color: Color.black.opacity(0.12), radius: 3, x: 0, y: 2)
                     .padding(.top, 35)
                 
@@ -110,21 +126,29 @@ struct MasterSyncView: View {
                             let item = viewModel.MasterSyncAPI[index]
                             HStack {
                                 Text(item.Name)
-                                    .font(.poppinsMedium(14))
+                                    .font(.poppinsMedium( isPad ? 16:14))
                                     .padding(.leading, 10)
                                 Spacer()
                                 if item.ShowContandLoading{
                                     
                                     Text("\(item.Count)")
-                                        .font(.poppinsMedium(14))
-                                        .frame(height: 24)
+                                        .font(.poppinsMedium( isPad ? 16:14))
+                                        .frame(height:  isPad ? 34:24)
                                         .padding(.horizontal, 4)
-                                        .foregroundColor(.appPrimary)
+                                        .foregroundColor(
+                                            colorScheme == .dark
+                                            ? .white
+                                            : .appPrimary
+                                        )
                                         .background(
-                                            Color.appPrimaryLight
-                                                .clipShape(
-                                                    RoundedRectangle(cornerRadius: 4)
-                                                )
+                                            (
+                                                colorScheme == .dark
+                                                ? Color.white.opacity(0.12)
+                                                : Color.appPrimaryLight
+                                            )
+                                            .clipShape(
+                                                RoundedRectangle(cornerRadius: 4)
+                                            )
                                         )
                                         .contentTransition(.numericText())
                                         .animation(
@@ -136,7 +160,7 @@ struct MasterSyncView: View {
                                         TimelineView(.animation) { context in
                                         Image("caution")
                                             .resizable()
-                                            .frame(width: 24, height: 24)
+                                            .frame(width: isPad ? 34:24, height: isPad ? 34:24)
                                             
                                     }
                                     }else{
@@ -145,7 +169,7 @@ struct MasterSyncView: View {
                                         Image("Reload")
                                             .resizable()
                                             .renderingMode(.template)
-                                            .frame(width: 16, height: 16)
+                                            .frame(width: isPad ? 26:16, height: isPad ? 26:16)
                                             .foregroundStyle(Color.appPrimary)
                                             .rotationEffect(
                                                 .degrees(
@@ -165,7 +189,7 @@ struct MasterSyncView: View {
                                 
                                 
                             }.frame(maxWidth: .infinity)
-                                .frame(height: 60)
+                                .frame(height: isPad ? 80:60)
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     Task{
@@ -175,7 +199,7 @@ struct MasterSyncView: View {
                             Divider()
                         }
                     }
-                }.background(Color.white)
+                }.background( colorScheme == .dark ?  Color(.systemGroupedBackground):Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 4)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
