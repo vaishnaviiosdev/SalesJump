@@ -126,3 +126,149 @@ struct Subordinate: Codable {
         case sfDetail = "SF_Detail"
     }
 }
+
+
+
+
+struct WorkTypeResponse: Codable {
+    let success: Bool?
+    let message: String?
+    let dataCount: Int?
+    let masterName: String?
+    let response: [WorkType]?
+}
+
+struct WorkType: Codable {
+    let id: Int?
+    let name: String?
+    let eTabs: String?
+    let fWFlg: String?
+    let placeInvolved: String?
+    let wTypeSName: String?
+    let expNeeded: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case eTabs = "ETabs"
+        case fWFlg = "FWFlg"
+        case placeInvolved = "Place_Involved"
+        case wTypeSName = "WType_SName"
+        case expNeeded = "exp_needed"
+    }
+}
+
+
+
+
+
+struct DistributorResponse: Codable {
+    let success: Bool?
+    let message: String?
+    let dataCount: Int?
+    let masterName: String?
+    let response: [Distributor]?
+}
+
+struct Distributor: Codable, Identifiable {
+    let id: Int?
+    let name: String?
+    let contactPerson: String?
+    let townCode: String?
+    let townName: String?
+    let addr1: String?
+    let addr2: String?
+    let city: String?
+    let pincode: String?
+    let gstn: String?
+    let lat: String?
+    let long: String?
+    let addrs: String?
+    let tcode: String?
+    let mobile: String?
+    let fieldCode: String?
+    let fieldName: String?
+    let listedDrCount: Int?
+    let outletCount: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case contactPerson = "contact_person"
+        case townCode = "Town_Code"
+        case townName = "Town_Name"
+        case addr1 = "Addr1"
+        case addr2 = "Addr2"
+        case city = "City"
+        case pincode = "Pincode"
+        case gstn = "GSTN"
+        case lat
+        case long
+        case addrs
+        case tcode = "Tcode"
+        case mobile
+        case fieldCode = "field_code"
+        case fieldName = "field_name"
+        case listedDrCount = "ListedDrCount"
+        case outletCount = "OutletCount"
+    }
+}
+
+
+
+
+
+
+struct RouteResponse: Codable {
+    let success: Bool?
+    let message: String?
+    let dataCount: Int?
+    let masterName: String?
+    let response: [Route]?
+
+    enum CodingKeys: String, CodingKey {
+        case success
+        case message
+        case dataCount
+        case masterName
+        case response
+    }
+}
+
+struct Route: Codable, Identifiable {
+    let id: Int?
+    let name: String?
+    let target: String?
+    let minProd: String?
+    let fieldCode: String?
+    let stockistCode: String?
+    let allowanceType: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case target
+        case minProd = "min_prod"
+        case fieldCode = "field_code"
+        case stockistCode = "stockist_code"
+        case allowanceType = "Allowance_Type"
+    }
+}
+
+
+
+
+
+struct JointWorkResponse: Codable {
+    let success: Bool?
+    let message: String?
+    let dataCount: Int?
+    let masterName: String?
+    let response: [MasterJointWork]?
+}
+
+struct MasterJointWork: Codable, Identifiable {
+    let id: String?
+    let name: String?
+    let desig: String?
+}

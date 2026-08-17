@@ -11,18 +11,20 @@ struct DashboardView: View {
     @StateObject private var vm = AuthenticationViewModel()
     @StateObject private var dashboardVM = DashboardViewModel()
     @State private var showSettings = false
+    @State private var goToMyDayPlan:Bool = false
     
     var body: some View {
+        NavigationStack {
         GeometryReader { geo in
             ZStack {
                 Color.white
                     .ignoresSafeArea()
-
+                
                 VStack(alignment: .leading, spacing: 10) {
-
+                    
                     HStack {
                         let imageSize = min(geo.size.width * 0.13, 100)
-
+                        
                         if let image = vm.profileImage {
                             Image(uiImage: image)
                                 .resizable()
@@ -45,18 +47,18 @@ struct DashboardView: View {
                                         .stroke(.black, lineWidth: 1)
                                 )
                         }
-
+                        
                         VStack(alignment: .leading, spacing: 10) {
                             Text(SessionManager.shared.sfName)
                                 .font(.poppinsMedium(16))
-
+                            
                             Text(SessionManager.shared.Desig_Code)
                                 .font(.poppinsMedium(16))
                                 .foregroundColor(.appTextGrey)
                         }
-
+                        
                         Spacer()
-
+                        
                         Button {
                             showSettings = true
                         } label: {
@@ -67,7 +69,7 @@ struct DashboardView: View {
                             )
                         }
                     }
-
+                    
                     CustomBtn(
                         title: "Check-IN",
                         height: UIDevice.current.userInterfaceIdiom == .pad ? 60 : 40,
@@ -76,42 +78,46 @@ struct DashboardView: View {
                         backgroundColor: .appPrimary,
                         fontWeight: .heavy
                     ) {
+                        goToMyDayPlan =  true
                         UIApplication.shared.dismissKeyboard()
                     }
-
+                    .navigationDestination(isPresented: $goToMyDayPlan) {
+                                    MyDayPlanView()
+                                }
+                    
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 10) {
-
-//                            Text("Quick Actions")
-//                                .font(.poppinsSemiBold(16))
-//                                .foregroundColor(.black)
-//
-//                            Spacer()
-//                                .frame(height: 5)
-//
-//                            HStack(spacing: 8) {
-//                                HomeButtons(
-//                                    imageName: "Secondary Order",
-//                                    title: "Retailer Order"
-//                                )
-//
-//                                HomeButtons(
-//                                    imageName: "Primary Order",
-//                                    title: "Primary Order"
-//                                )
-//                            }
-//
-//                            TodayActivityView(vm: dashboardVM)
-//
-//                            buttonView()
-
+                            
+                            //                            Text("Quick Actions")
+                            //                                .font(.poppinsSemiBold(16))
+                            //                                .foregroundColor(.black)
+                            //
+                            //                            Spacer()
+                            //                                .frame(height: 5)
+                            //
+                            //                            HStack(spacing: 8) {
+                            //                                HomeButtons(
+                            //                                    imageName: "Secondary Order",
+                            //                                    title: "Retailer Order"
+                            //                                )
+                            //
+                            //                                HomeButtons(
+                            //                                    imageName: "Primary Order",
+                            //                                    title: "Primary Order"
+                            //                                )
+                            //                            }
+                            //
+                            //                            TodayActivityView(vm: dashboardVM)
+                            //
+                            //                            buttonView()
+                            
                             if let mtdData = dashboardVM.MTD?.data?.first {
                                 MTDView(data: mtdData)
                             }
-
-//                            RecentActivityView(
-//                                activities: dashboardVM.recentActivity?.data ?? []
-//                            )
+                            
+                            //                            RecentActivityView(
+                            //                                activities: dashboardVM.recentActivity?.data ?? []
+                            //                            )
                         }
                         .padding(.bottom, 20)
                     }
@@ -125,13 +131,14 @@ struct DashboardView: View {
                 await vm.fetchProfileImage(
                     fileName: SessionManager.shared.ProfilePicString
                 )
-
+                
                 await dashboardVM.getSecondarySales(Type: 1)
                 await dashboardVM.getSecondarySales(Type: 2)
                 await dashboardVM.getMTD()
                 await dashboardVM.getRecentActivity()
             }
         }
+    }
     }
 }
 
