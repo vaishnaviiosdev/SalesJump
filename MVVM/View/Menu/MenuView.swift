@@ -26,6 +26,8 @@ struct MenuView: View {
     @State private var selectedMenu: MenuItem?
     @State private var navigationPath = NavigationPath()
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
+    @Environment(\.colorScheme) var colorScheme
 
     let menuItems: [MenuItem] = [
 
@@ -356,6 +358,7 @@ struct MenuView: View {
                             TopRoundedRectangle(radius: 12)
                                 .stroke(Color.gray.opacity(0.5), lineWidth: 0.5)
                         )
+                        .background(Color(.systemBackground))
 
                 }
               

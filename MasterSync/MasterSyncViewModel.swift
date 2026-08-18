@@ -221,7 +221,75 @@ class MasterSyncViewModel: ObservableObject {
                         print("CoreData Save Error: \(error)")
                     }
                 }
-
+                
+            case "worktype":
+                let items = try JSONDecoder().decode(WorkTypeResponse.self,from: data)
+                let context = CoreDataStack.shared.newBackgroundContext()
+                await context.perform {
+                    do {
+                        let entity = WorkTypeEntity(context: context)
+                        entity.workType = try JSONEncoder().encode(items.response)
+                        entity.lastUpdated = Date()
+                        entity.masterName = items.masterName
+                        if context.hasChanges {
+                            try context.save()
+                        }
+                    } catch {
+                        print("CoreData Save Error: \(error)")
+                    }
+                }
+                
+                
+            case "distributor":
+                let items = try JSONDecoder().decode(DistributorResponse.self,from: data)
+                let context = CoreDataStack.shared.newBackgroundContext()
+                await context.perform {
+                    do {
+                        let entity = DistributorEntity(context: context)
+                        entity.distributor = try JSONEncoder().encode(items.response)
+                        entity.lastUpdated = Date()
+                        entity.masterName = items.masterName
+                        if context.hasChanges {
+                            try context.save()
+                        }
+                    } catch {
+                        print("CoreData Save Error: \(error)")
+                    }
+                }
+            case "route":
+                let items = try JSONDecoder().decode(RouteResponse.self,from: data)
+                let context = CoreDataStack.shared.newBackgroundContext()
+                await context.perform {
+                    do {
+                        let entity = RouteEntity(context: context)
+                        entity.route = try JSONEncoder().encode(items.response)
+                        entity.lastUpdated = Date()
+                        entity.masterName = items.masterName
+                        if context.hasChanges {
+                            try context.save()
+                        }
+                    } catch {
+                        print("CoreData Save Error: \(error)")
+                    }
+                }
+                
+            case "jointwork":
+                let items = try JSONDecoder().decode(JointWorkResponse.self,from: data)
+                let context = CoreDataStack.shared.newBackgroundContext()
+                await context.perform {
+                    do {
+                        let entity = JointworkEntity(context: context)
+                        entity.jointwork = try JSONEncoder().encode(items.response)
+                        entity.lastUpdated = Date()
+                        entity.masterName = items.masterName
+                        if context.hasChanges {
+                            try context.save()
+                        }
+                    } catch {
+                        print("CoreData Save Error: \(error)")
+                    }
+                }
+                
             default:
                 print("No model mapped for \(masterName)")
             }
