@@ -21,6 +21,7 @@ class AuthenticationViewModel: ObservableObject {
     @Published var changePwdData: passwordResponse?
     @Published var ImageData: getImageData?
     @Published var logout: logoutData?
+    @Published var uploadedImageURL: String?
     
     func SignIn(username: String, password: String) async {
     
@@ -72,7 +73,6 @@ class AuthenticationViewModel: ObservableObject {
             UserDefaults.standard.set(true, forKey: "User_Login")
             
             APIClient.shared.Url = "\(response.response?.BaseUrl ?? "")api/\(response.response?.SenderId ?? "")/"
-            
             
             Task {
                 async let myDayPlan: () = GetMyDayPlaneDetils()
@@ -156,6 +156,7 @@ class AuthenticationViewModel: ObservableObject {
             
             if let fileName = response.status?[0].imgUrl {
                 await fetchProfileImage(fileName: fileName)
+                uploadedImageURL = fileName
             }
             print("Upload Success")
             print(response)

@@ -9,12 +9,14 @@ import SwiftUI
 
 struct Login_TxtfieldName: View {
     @Binding var titleName: String
+    var foreGroundColour: Color = .appTextGrey
+    var fontSize: CGFloat = 12
     
     var body: some View {
         HStack(spacing: 0) {
             Text(titleName)
-                .font(.poppinsMedium(12))
-                .foregroundColor(.appTextGrey)
+                .font(.poppinsMedium(fontSize))
+                .foregroundColor(foreGroundColour)
             
             Text("*")
                 .foregroundColor(.appRed)
@@ -28,7 +30,6 @@ struct LoginView: View {
     @EnvironmentObject var router: AppRouter
     @State private var userName = ""
     @State private var password = ""
-
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var isLoading = false
@@ -152,7 +153,7 @@ struct LoginContent: View {
                                 .foregroundColor(.white)
 
                             ImageV(
-                                name: "hand",
+                                name: "HandWavie",
                                 type: .assetName
                             )
                         }

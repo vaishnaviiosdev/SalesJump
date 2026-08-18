@@ -17,19 +17,21 @@ enum MenuRoute: Hashable {
     case tourPlan
     case circular
     case missedDateEntry
+    case leaveForm
 }
 
 struct MenuView: View {
 
     @State private var searchTxt = ""
     @State private var selectedMenu: MenuItem?
+    @State private var navigationPath = NavigationPath()
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     let menuItems: [MenuItem] = [
 
         MenuItem(
             title: "Orders",
-            imageName: "Order",
+            imageName: "Group 32",
             subItems: [
                 SubMenuItem(
                     title: "Retailer Order",
@@ -49,7 +51,7 @@ struct MenuView: View {
 
         MenuItem(
             title: "Return",
-            imageName: "Group 33",
+            imageName: "Return",
             subItems: [
                 SubMenuItem(
                     title: "Primary Order Return",
@@ -120,7 +122,7 @@ struct MenuView: View {
 
         MenuItem(
             title: "Distributor List",
-            imageName: "Group 47",
+            imageName: "Stockiest",
             subItems: [
                 SubMenuItem(
                     title: "View Distributor List",
@@ -385,6 +387,9 @@ struct MenuView: View {
 
                 case .missedDateEntry:
                     demoView()
+                    
+                case .leaveForm:
+                    LeaveFormView()
                 }
             }
         }
@@ -517,73 +522,76 @@ struct MenuView: View {
 
                 ForEach(items) { item in
 
-                    Button {
-                        //action()
-                    } label: {
-                        HStack(spacing: 15) {
-                            ZStack {
+                    if item.title == "Leave Form" {
 
-                                Circle()
-                                    .fill(
-                                        Color.appPrimary.opacity(0.12)
-                                    )
-                                    .frame(
-                                        width: width * 0.10,
-                                        height: width * 0.10
-                                    )
+                        NavigationLink(value: MenuRoute.leaveForm) {
 
-                                Image(item.imageName)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(
-                                        width: width * 0.05,
-                                        height: width * 0.05
-                                    )
-                            }
-
-                            Text(item.title)
-                                .font(
-                                    .poppinsSemiBold(
-                                        UIDevice.current.userInterfaceIdiom == .pad
-                                        ? 18 : 13
-                                    )
-                                )
-                                .foregroundColor(.appBlack)
-                                .lineLimit(nil)
-
-                            Spacer()
-
-                            Image(systemName: "chevron.right")
-                                .font(.poppinsMedium(13))
-                                .foregroundColor(.appBlack)
-                                .fontWeight(.bold)
-                                .padding(.trailing, 8)
+                            subMenuRow(item: item)
                         }
-                        .padding(5)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .overlay(alignment: .bottom) {
-                            Rectangle()
-                                .fill(
-                                    Color.appPrimary.opacity(0.15)
-                                )
-                                .frame(height: 1)
+
+                    } else {
+
+                        Button {
+                            print("Navigate to:", item.title)
+                        } label: {
+
+                            subMenuRow(item: item)
                         }
-                    }
-                    .buttonStyle(.plain)
-
-                    if item.id != items.last?.id {
-
-                        Rectangle()
-                            .fill(
-                                Color.appPrimary.opacity(0.15)
-                            )
-                            .frame(height: 1)
-                            .padding(.horizontal, 15)
+                        .buttonStyle(.plain)
                     }
                 }
             }
             .padding(.horizontal, horizontalPadding)
             .background(Color.white)
+        }
+
+        @ViewBuilder
+        private func subMenuRow(item: SubMenuItem) -> some View {
+
+            HStack(spacing: 15) {
+
+                ZStack {
+
+                    Circle()
+                        .fill(
+                            Color.appPrimary.opacity(0.12)
+                        )
+                        .frame(
+                            width: width * 0.10,
+                            height: width * 0.10
+                        )
+
+                    Image(item.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: width * 0.05,
+                            height: width * 0.05
+                        )
+                }
+
+                Text(item.title)
+                    .font(
+                        .poppinsSemiBold(
+                            UIDevice.current.userInterfaceIdiom == .pad
+                            ? 18 : 13
+                        )
+                    )
+                    .foregroundColor(.appBlack)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.poppinsMedium(13))
+                    .foregroundColor(.appBlack)
+                    .fontWeight(.bold)
+                    .padding(.trailing, 8)
+            }
+            .padding(5)
+            .frame(
+                maxWidth: .infinity,
+                minHeight: 50
+            )
         }
     }
 

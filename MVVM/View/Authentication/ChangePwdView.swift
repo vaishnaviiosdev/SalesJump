@@ -132,9 +132,6 @@ struct ChangePwdView: View {
         else if confirmPassword.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return "Enter the confirm password"
         }
-//        else if !isValidPassword(password) {
-//            return "Password does not meet the requirements"
-//        }
         else if password != confirmPassword {
             return "Password does not meet the requirements"
         }

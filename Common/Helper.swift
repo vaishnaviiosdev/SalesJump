@@ -218,6 +218,27 @@ func getTodayDate() -> String {
     return formatter.string(from: Date())
 }
 
+func getTodayDateTime() -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    return formatter.string(from: Date())
+}
+
+func getCurrentYear() -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy"
+    return formatter.string(from: Date())
+}
+
+extension Date {
+    func formattedString(format: String = "dd MMM yyyy") -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        return formatter.string(from: self)
+    }
+}
+
+
 //
 //struct CustomAlertModifier: ViewModifier {
 //    @ObservedObject var manager: CustomAlertManager

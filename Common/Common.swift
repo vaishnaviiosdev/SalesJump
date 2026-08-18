@@ -205,3 +205,581 @@ struct TopRoundedRectangle: Shape {
         return path
     }
 }
+
+//struct CustommDatePicker: View {
+//    @Binding var selectedDate: Date?
+//    @State private var showPicker = false
+//    @State var SelectMod:String?
+//    @State var FromDate:Date?
+//    
+//    var placeholder: String = "Select Date"
+//    var dateRange: ClosedRange<Date>? = nil
+//    
+//    var body: some View {
+//        Button(action: {
+//            showPicker.toggle()
+//        }) {
+//            HStack {
+//                ZStack {
+//                    if let date = selectedDate {
+//                        Text(date.formattedString())
+//                            .font(.poppinsMedium(14))
+//                            .foregroundColor(.black)
+//                    }
+//                    else {
+//                        Text(placeholder)
+//                            .regularTextStyle(size: 14, foreground: .black)
+//                    }
+//                }
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//                
+//                ImageV(name: "Calendar", type: .assetName, width: 15, height: 15)
+//            }
+//            .padding(12)
+//            .background(Color.white)
+//            .cornerRadius(8)
+//            .overlay(
+//                RoundedRectangle(cornerRadius: 5)
+//                    .stroke(
+//                        Color.gray.opacity(0.4),
+//                        lineWidth: 1
+//                    )
+//            )
+//        }
+//        .sheet(isPresented: $showPicker) {
+//            VStack {
+//                DatePicker(
+//                    "Select Date",
+//                    selection: Binding(
+//                        get: {
+//                            selectedDate ?? Date()
+//                        },
+//                        set: { selectedDate = $0 }
+//                    ),
+//                    in: dateRange ?? Date.distantPast...Date.distantFuture,
+//                    displayedComponents: .date
+//                )
+//                .datePickerStyle(.graphical)
+//                .padding()
+//                
+//                Button(action: {
+//                    if selectedDate == nil {
+//                       selectedDate = dateRange?.lowerBound ?? Date()
+//                    }
+//                    showPicker = false
+//                }) {
+//                    Text("Done")
+//                        .regularTextStyle(size: 16, foreground: .white, fontWeight: .bold)
+//                        .frame(maxWidth: .infinity)
+//                        .padding()
+//                        .background(Color.appPrimary)
+//                        .cornerRadius(12)
+//                }
+//                .padding(.horizontal, 16)
+//            }
+//            .presentationDetents([.medium, .large])
+//        }
+//    }
+//}
+
+//struct CustommDatePicker: View {
+//    
+//    @Binding var selectedDate: Date?
+//    @Binding var selectedDayType: String
+//    @State private var showPicker = false
+//    //@State private var selectedDayType = "Full day"
+//    @State private var firstHalf = "Select"
+//    @State private var secondHalf = "Select"
+//    @Binding var selectedDateText : String
+//    @State private var selectedHalf: String?
+//    
+//    @State var SelectMod: String?
+//    @State var FromDate: Date?
+//    
+//    var placeholder: String = "Select Date"
+//    var dateRange: ClosedRange<Date>? = nil
+//    @State private var contentHeight: CGFloat = 0
+//    
+//    var body: some View {
+//        
+//        Button(action: {
+//            showPicker.toggle()
+//        }) {
+//            
+//            HStack {
+//                
+//                ZStack {
+//                    if !selectedDateText.isEmpty {
+//                        Text(selectedDateText)
+//                            .font(.poppinsMedium(14))
+//                            .foregroundColor(.black)
+//                    } else {
+//                        Text(placeholder)
+//                            .regularTextStyle(
+//                                size: 14,
+//                                foreground: .black
+//                            )
+//                    }
+//                }
+//                .frame(
+//                    maxWidth: .infinity,
+//                    alignment: .leading
+//                )
+//                
+//                ImageV(
+//                    name: "Calendar",
+//                    type: .assetName,
+//                    width: 15,
+//                    height: 15
+//                )
+//            }
+//            .padding(12)
+//            .background(Color.white)
+//            .cornerRadius(8)
+//            .overlay(
+//                RoundedRectangle(cornerRadius: 5)
+//                    .stroke(
+//                        Color.gray.opacity(0.4),
+//                        lineWidth: 1
+//                    )
+//            )
+//        }
+//        .buttonStyle(.plain)
+//        
+//        .sheet(isPresented: $showPicker) {
+//            
+//            VStack(spacing: 0) {
+//                DatePicker(
+//                    "Select Date",
+//                    selection: Binding(
+//                        get: {
+//                            selectedDate ?? Date()
+//                        },
+//                        set: {
+//                            selectedDate = $0
+//                        }
+//                    ),
+//                    in: dateRange ??
+//                        Date.distantPast...Date.distantFuture,
+//                    displayedComponents: .date
+//                )
+//                .datePickerStyle(.graphical)
+//                .padding()
+//                
+//                Spacer()
+//                
+//                HStack(spacing: 16) {
+//                    Button {
+//                        selectedDayType = "Full day"
+//                        selectedHalf = nil
+//                        firstHalf = "Select"
+//                        secondHalf = "Select"
+//
+//                        if let date = selectedDate {
+//                            selectedDateText = date.formattedString()
+//                        }
+//
+//                    } label: {
+//                        Text("Full day")
+//                            .font(.poppinsMedium(15))
+//                            .foregroundColor(.black)
+//                            //.frame(maxWidth: .infinity)
+//                            //.frame(maxHeight: .infinity)
+//                            .frame(height: 55)
+//                            .background(
+//                                selectedDayType == "Full day"
+//                                ? Color.appPrimary.opacity(0.15)
+//                                : Color.gray.opacity(0.25)
+//                            )
+//                            .cornerRadius(8)
+//                            .padding(.horizontal)
+//                    }
+//                    
+//                    //Spacer()
+//                    
+//                    Button {
+//                        selectedDayType = "Half day"
+//                    } label: {
+//
+//                        HStack(spacing: 10) {
+//
+//                            Text("Half day")
+//                                .font(.poppinsMedium(15))
+//                                .foregroundColor(.black)
+//                                .fixedSize()
+//
+//                            if selectedDayType == "Half day" {
+//                                Button {
+//                                    guard selectedDate != nil else { return }
+//
+//                                    selectedHalf = "1st"
+//                                    firstHalf = "1st"
+//                                    selectedDayType = "Half day"
+//
+//                                    selectedDateText = halfDayTitle("1st")
+//
+//                                } label: {
+//                                    Text(
+//                                        selectedDate != nil
+//                                        ? halfDayTitle("1st")
+//                                        : "Select"
+//                                    )
+//                                    .font(.poppinsMedium(13))
+//                                    .foregroundColor(.gray)
+//                                    .lineLimit(1)
+//                                    .minimumScaleFactor(0.7)
+//                                    //.frame(maxWidth: .infinity, maxHeight: .infinity)
+//                                    //.frame(width: 100, height: 35)
+//                                    .background(Color.white)
+//                                    .cornerRadius(6)
+//                                }
+//                                    
+//                                Button {
+//                                    guard selectedDate != nil else { return }
+//
+//                                    selectedHalf = "2nd"
+//                                    secondHalf = "2nd"
+//                                    selectedDayType = "Half day"
+//
+//                                    selectedDateText = halfDayTitle("2nd")
+//
+//                                } label: {
+//                                    Text(
+//                                        selectedDate != nil
+//                                        ? halfDayTitle("2nd")
+//                                        : "Select"
+//                                    )
+//                                    .font(.poppinsMedium(13))
+//                                    .foregroundColor(.gray)
+//                                    .lineLimit(1)
+//                                    .minimumScaleFactor(0.7)
+//                                    //.frame(maxWidth: .infinity, maxHeight: .infinity)
+//                                    //.frame(width: 100, height: 35)
+//                                    .background(Color.white)
+//                                    .cornerRadius(6)
+//                                }
+//                            }
+//                        }
+//                        .frame(maxWidth: .infinity)
+//                        .frame(height: 55)
+//                        .background(
+//                            selectedDayType == "Half day"
+//                            ? Color.appPrimary.opacity(0.15)
+//                            : Color.gray.opacity(0.25)
+//                        )
+//                        .cornerRadius(8)
+//                    }
+//                }
+//                .padding(.horizontal, 16)
+//                .padding(.top, 10)
+//                
+//                Button {
+//
+//                    if selectedDate == nil {
+//                        selectedDate =
+//                            dateRange?.lowerBound ?? Date()
+//                    }
+//
+//                    showPicker = false
+//
+//                } label: {
+//
+//                    Text(selectedDateButtonTitle)
+//                    .regularTextStyle(
+//                        size: 16,
+//                        foreground: .white,
+//                        fontWeight: .bold
+//                    )
+//                    .frame(maxWidth: .infinity)
+//                    .padding()
+//                    .background(Color.appPrimary)
+//                    .cornerRadius(12)
+//                }
+//                .padding(.horizontal, 16)
+//                .padding(.top, 16)
+//                .padding(.bottom, 10)
+//            }
+//            .presentationDetents([.large])
+//        }
+//    }
+//    
+//    private var selectedDateButtonTitle: String {
+//
+//        guard selectedDate != nil else {
+//            return "Select Date"
+//        }
+//
+//        if selectedDayType == "Full day" {
+//            return selectedDate!.formattedString()
+//        }
+//
+//        if let selectedHalf = selectedHalf {
+//            return halfDayTitle(selectedHalf)
+//        }
+//
+//        return selectedDate!.formattedString()
+//    }
+//    
+//    private func halfDayTitle(_ suffix: String) -> String {
+//        guard let date = selectedDate else {
+//            return "Select"
+//        }
+//
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "dd MMM yyyy"
+//
+//        return "\(formatter.string(from: date)) \(suffix)"
+//    }
+//}
+
+struct CustommDatePicker: View {
+    
+    @Binding var selectedDate: Date?
+    @Binding var selectedDayType: String
+    @State private var showPicker = false
+    //@State private var selectedDayType = "Full day"
+    @State private var firstHalf = "Select"
+    @State private var secondHalf = "Select"
+    @Binding var selectedDateText : String
+    @Binding var selectedHalf: String?
+    
+    @State var SelectMod: String?
+    @State var FromDate: Date?
+    
+    var placeholder: String = "Select Date"
+    var dateRange: ClosedRange<Date>? = nil
+    @State private var contentHeight: CGFloat = 0
+    
+    var body: some View {
+        
+        Button(action: {
+            showPicker.toggle()
+        }) {
+            
+            HStack {
+                
+                ZStack {
+                    if !selectedDateText.isEmpty {
+                        Text(selectedDateText)
+                            .font(.poppinsMedium(14))
+                            .foregroundColor(.black)
+                    } else {
+                        Text(placeholder)
+                            .regularTextStyle(
+                                size: 14,
+                                foreground: .black
+                            )
+                    }
+                }
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .leading
+                )
+                
+                ImageV(
+                    name: "Calendar",
+                    type: .assetName,
+                    width: 15,
+                    height: 15
+                )
+            }
+            .padding(12)
+            .background(Color.white)
+            .cornerRadius(8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(
+                        Color.gray.opacity(0.4),
+                        lineWidth: 1
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+        
+        .sheet(isPresented: $showPicker) {
+            
+            VStack(spacing: 0) {
+                DatePicker(
+                    "Select Date",
+                    selection: Binding(
+                        get: {
+                            selectedDate ?? Date()
+                        },
+                        set: {
+                            selectedDate = $0
+                        }
+                    ),
+                    in: dateRange ??
+                        Date.distantPast...Date.distantFuture,
+                    displayedComponents: .date
+                )
+                .datePickerStyle(.graphical)
+                .padding()
+                
+                Spacer()
+                
+                HStack(spacing: 16) {
+                    Button {
+                        selectedDayType = "Full day"
+                        selectedHalf = nil
+                        firstHalf = "Select"
+                        secondHalf = "Select"
+
+                        if let date = selectedDate {
+                            selectedDateText = date.formattedString()
+                        }
+
+                    } label: {
+                        Text("Full day")
+                            .font(.poppinsMedium(15))
+                            .foregroundColor(.black)
+                            //.frame(maxWidth: .infinity)
+                            .frame(maxHeight: .infinity)
+                            .frame(height: 55)
+                            .background(
+                                selectedDayType == "Full day"
+                                ? Color.appPrimary.opacity(0.15)
+                                : Color.gray.opacity(0.25)
+                            )
+                            .cornerRadius(8)
+                            //.padding(.horizontal)
+                    }
+                    
+                    //Spacer()
+                    
+                    Button {
+                        selectedDayType = "Half day"
+                    } label: {
+
+                        HStack(spacing: 10) {
+
+                            Text("Half day")
+                                .font(.poppinsMedium(15))
+                                .foregroundColor(.black)
+                                .fixedSize()
+
+                            if selectedDayType == "Half day" {
+                                Button {
+                                    guard selectedDate != nil else { return }
+
+                                    selectedHalf = "1st"
+                                    firstHalf = "1st"
+                                    selectedDayType = "Half day"
+
+                                    selectedDateText = halfDayTitle("1st")
+
+                                } label: {
+                                    Text(
+                                        selectedDate != nil
+                                        ? halfDayTitle("1st")
+                                        : "Select"
+                                    )
+                                    .font(.poppinsMedium(13))
+                                    .foregroundColor(.gray)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                                    //.frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    //.frame(width: 100, height: 35)
+                                    .background(Color.white)
+                                    .cornerRadius(6)
+                                }
+                                    
+                                Button {
+                                    guard selectedDate != nil else { return }
+
+                                    selectedHalf = "2nd"
+                                    secondHalf = "2nd"
+                                    selectedDayType = "Half day"
+
+                                    selectedDateText = halfDayTitle("2nd")
+
+                                } label: {
+                                    Text(
+                                        selectedDate != nil
+                                        ? halfDayTitle("2nd")
+                                        : "Select"
+                                    )
+                                    .font(.poppinsMedium(13))
+                                    .foregroundColor(.gray)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                                    //.frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    //.frame(width: 100, height: 35)
+                                    .background(Color.white)
+                                    .cornerRadius(6)
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 55)
+                        .background(
+                            selectedDayType == "Half day"
+                            ? Color.appPrimary.opacity(0.15)
+                            : Color.gray.opacity(0.25)
+                        )
+                        .cornerRadius(8)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 10)
+                
+                Button {
+
+                    if selectedDate == nil {
+                        selectedDate =
+                            dateRange?.lowerBound ?? Date()
+                    }
+
+                    showPicker = false
+
+                } label: {
+
+                    Text(selectedDateButtonTitle)
+                    .regularTextStyle(
+                        size: 16,
+                        foreground: .white,
+                        fontWeight: .bold
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.appPrimary)
+                    .cornerRadius(12)
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+                .padding(.bottom, 10)
+            }
+            .presentationDetents([.large])
+        }
+    }
+    
+    private var selectedDateButtonTitle: String {
+
+        guard selectedDate != nil else {
+            return "Select Date"
+        }
+
+        if selectedDayType == "Full day" {
+            return selectedDate!.formattedString()
+        }
+
+        if let selectedHalf = selectedHalf {
+            return halfDayTitle(selectedHalf)
+        }
+
+        return selectedDate!.formattedString()
+    }
+    
+    private func halfDayTitle(_ suffix: String) -> String {
+        guard let date = selectedDate else {
+            return "Select"
+        }
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM yyyy"
+
+        return "\(formatter.string(from: date)) \(suffix)"
+    }
+}
+
+
