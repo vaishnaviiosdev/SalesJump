@@ -56,7 +56,7 @@ struct SettingsView: View {
                                         )
                                 }
                                 else {
-                                    Image("profile_pic")
+                                    Image("Profile Picture_1")
                                         .resizable()
                                         .scaledToFill()
                                         .frame(width: imageSize, height: imageSize)

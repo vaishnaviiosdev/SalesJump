@@ -39,6 +39,8 @@ struct MasterSyncView: View {
                 
                 HStack {
                     
+                    
+                    
                     Image("Up Arrow")
                         .renderingMode(.template)
                         .resizable()
@@ -84,7 +86,7 @@ struct MasterSyncView: View {
                 
               
                 
-                if SessionManager.shared.SF_Type == "2"{
+                if SessionManager.shared.SF_Type == "2" {
                     HStack{
                         
                         Text(viewModel.HeadquarterName == "" ? "Select Headquarter" : viewModel.HeadquarterName)

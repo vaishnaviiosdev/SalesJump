@@ -41,6 +41,10 @@
 		388C567F3019D204002C252C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C567E3019D204002C252C /* SettingsView.swift */; };
 		388C569D301A0BDA002C252C /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569C301A0BD1002C252C /* CoreDataManager.swift */; };
 		388C569F301A1D49002C252C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C569E301A1D42002C252C /* SessionManager.swift */; };
+		388D482A30332E32004497E3 /* LeaveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D482930332E2B004497E3 /* LeaveViewModel.swift */; };
+		389298F33030509E009821A8 /* LeaveFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389298F23030509E009821A8 /* LeaveFormView.swift */; };
+		389298F730305D71009821A8 /* LeaveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389298F630305D6C009821A8 /* LeaveModel.swift */; };
+		389298FA303060CA009821A8 /* MenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389298F9303060C4009821A8 /* MenuViewModel.swift */; };
 		38C718FF302EDB2D0005DAD3 /* UserSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C718FE302EDB2D0005DAD3 /* UserSetup.swift */; };
 		38C7198D302F19FA0005DAD3 /* ToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C7198C302F19FA0005DAD3 /* ToastManager.swift */; };
 /* End PBXBuildFile section */
@@ -81,6 +85,10 @@
 		388C567E3019D204002C252C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		388C569C301A0BD1002C252C /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		388C569E301A1D42002C252C /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		388D482930332E2B004497E3 /* LeaveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveViewModel.swift; sourceTree = "<group>"; };
+		389298F23030509E009821A8 /* LeaveFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveFormView.swift; sourceTree = "<group>"; };
+		389298F630305D6C009821A8 /* LeaveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveModel.swift; sourceTree = "<group>"; };
+		389298F9303060C4009821A8 /* MenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewModel.swift; sourceTree = "<group>"; };
 		38C718FE302EDB2D0005DAD3 /* UserSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSetup.swift; sourceTree = "<group>"; };
 		38C7198C302F19FA0005DAD3 /* ToastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,6 +169,7 @@
 		386C56A1301721090066DC31 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				389298F430305D5B009821A8 /* Menu */,
 				386C56A5301721440066DC31 /* Authentication */,
 			);
 			path = Model;
@@ -179,6 +188,7 @@
 		386C56A33017211B0066DC31 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				389298F8303060BD009821A8 /* Menu */,
 				386C56A63017214E0066DC31 /* Authentication */,
 			);
 			path = ViewModel;
@@ -268,7 +278,49 @@
 		3884265B302AF48C002943B9 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				389298F13030508C009821A8 /* Leave */,
 				3884265C302AF4B6002943B9 /* MenuView.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		388D482830332E24004497E3 /* Leave */ = {
+			isa = PBXGroup;
+			children = (
+				388D482930332E2B004497E3 /* LeaveViewModel.swift */,
+			);
+			path = Leave;
+			sourceTree = "<group>";
+		};
+		389298F13030508C009821A8 /* Leave */ = {
+			isa = PBXGroup;
+			children = (
+				389298F23030509E009821A8 /* LeaveFormView.swift */,
+			);
+			path = Leave;
+			sourceTree = "<group>";
+		};
+		389298F430305D5B009821A8 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				389298F530305D66009821A8 /* Leave */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		389298F530305D66009821A8 /* Leave */ = {
+			isa = PBXGroup;
+			children = (
+				389298F630305D6C009821A8 /* LeaveModel.swift */,
+			);
+			path = Leave;
+			sourceTree = "<group>";
+		};
+		389298F8303060BD009821A8 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				388D482830332E24004497E3 /* Leave */,
+				389298F9303060C4009821A8 /* MenuViewModel.swift */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -352,6 +404,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3827FA1B3033361D00F665F3 /* faceCaptureCamera.swift in Sources */,
+				389298F33030509E009821A8 /* LeaveFormView.swift in Sources */,
 				388C567F3019D204002C252C /* SettingsView.swift in Sources */,
 				3880E0173018CCAE00075E50 /* NetworkManager.swift in Sources */,
 				386C56C1301739210066DC31 /* Common.swift in Sources */,
@@ -360,9 +413,11 @@
 				3880E0113018B66300075E50 /* AuthenticationModel.swift in Sources */,
 				3884265D302AF4B6002943B9 /* MenuView.swift in Sources */,
 				386C56B9301734350066DC31 /* Helper.swift in Sources */,
+				389298F730305D71009821A8 /* LeaveModel.swift in Sources */,
 				38C718FF302EDB2D0005DAD3 /* UserSetup.swift in Sources */,
 				3827F9EA3032D16200F665F3 /* MyDayPlanView.swift in Sources */,
 				387443D93024823B008EFC66 /* PermissionManager.swift in Sources */,
+				388D482A30332E32004497E3 /* LeaveViewModel.swift in Sources */,
 				383365E6302C9AAB0054B736 /* MasterSyncModel.swift in Sources */,
 				386C56C330174F020066DC31 /* LoginView.swift in Sources */,
 				383365E2302C9A6E0054B736 /* MasterSyncView.swift in Sources */,
@@ -376,6 +431,7 @@
 				3827F9EC3032DAD800F665F3 /* SelectionFieldView.swift in Sources */,
 				3880E01B3018D5D400075E50 /* Constant.swift in Sources */,
 				386C56A8301722C10066DC31 /* WelcomeView.swift in Sources */,
+				389298FA303060CA009821A8 /* MenuViewModel.swift in Sources */,
 				387A87993025D00000B533FB /* DashboardViewModel.swift in Sources */,
 				388C569D301A0BDA002C252C /* CoreDataManager.swift in Sources */,
 				3880E0193018D22D00075E50 /* APIClient.swift in Sources */,
