@@ -22,6 +22,7 @@ class AuthenticationViewModel: ObservableObject {
     @Published var ImageData: getImageData?
     @Published var logout: logoutData?
     @Published var uploadedImageURL: String?
+    @Published var fileName: String?
     
     func SignIn(username: String, password: String) async {
     
@@ -157,6 +158,9 @@ class AuthenticationViewModel: ObservableObject {
             if let fileName = response.status?[0].imgUrl {
                 await fetchProfileImage(fileName: fileName)
                 uploadedImageURL = fileName
+            }
+            if let imageUrl = response.status?[0].fileName {
+                fileName = imageUrl
             }
             print("Upload Success")
             print(response)

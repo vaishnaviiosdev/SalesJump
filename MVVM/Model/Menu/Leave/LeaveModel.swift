@@ -39,3 +39,33 @@ struct LeaveSubmitResponse: Codable {
     let leave_Id: String?
     let reporting_To_SF: String?
 }
+
+struct LeaveHistoryModel: Codable {
+    let success: Bool
+    let data: [LeaveHistoryData]?
+}
+
+struct LeaveHistoryData: Codable, Identifiable {
+    var id = UUID().uuidString
+    let Leave_Date: String?
+    let Created_Date: String?
+    let Reason: String?
+    let Leave_Type_Name: String?
+    let Rejected_Reason: String?
+    let No_of_Days: Double?
+    let Leave_flag: String?
+    let halfday: Double?
+    let Leave_status: String?
+
+    enum CodingKeys: String, CodingKey {
+        case Leave_Date
+        case Created_Date
+        case Reason
+        case Leave_Type_Name
+        case Rejected_Reason
+        case No_of_Days
+        case Leave_flag
+        case halfday
+        case Leave_status
+    }
+}
