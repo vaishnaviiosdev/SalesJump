@@ -70,40 +70,40 @@ struct MasterSyncView: View {
                 
               
                 
-                // if SessionManager.shared.SF_Type == "2" {
-                //     HStack{
+                if SessionManager.shared.SF_Type == "2" {
+                    HStack{
                         
-                //         Text(viewModel.HeadquarterName == "" ? "Select Headquarter" : viewModel.HeadquarterName)
-                //             .font(.poppinsMedium(14))
-                //             .foregroundStyle(viewModel.HeadquarterName == "" ? Color.gray : Color.primary)
-                //             .padding(.leading,8)
+                        Text(viewModel.HeadquarterName == "" ? "Select Headquarter" : viewModel.HeadquarterName)
+                            .font(.poppinsMedium(14))
+                            .foregroundStyle(viewModel.HeadquarterName == "" ? Color.gray : Color.primary)
+                            .padding(.leading,8)
                         
-                //         Spacer()
+                        Spacer()
                         
-                //         Image("Down Arrow Outline")
-                //             .padding(.trailing,8)
+                        Image("Down Arrow Outline")
+                            .padding(.trailing,8)
                         
-                //     }.frame(height: 45)
-                //         .frame(maxWidth: .infinity)
-                //         .overlay(
-                //             RoundedRectangle(cornerRadius: 4)
-                //                 .stroke(Color.gray, lineWidth: 0.5)
+                    }.frame(height: 45)
+                        .frame(maxWidth: .infinity)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color.gray, lineWidth: 0.5)
                             
-                //         )
-                //         .padding(.horizontal)
-                //         .contentShape(Rectangle())
-                //         .onTapGesture {
-                //             Task {
-                //             await viewModel.fetchSubordinate()
-                //                 if viewModel.Subordinates.isEmpty{
-                //                     Toastmanager.shared.show("No data available")
-                //                     return
-                //                 }
-                //             ShowBottomSheet = true
-                //             }
-                //         }
+                        )
+                        .padding(.horizontal)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            Task {
+                            await viewModel.fetchSubordinate()
+                                if viewModel.Subordinates.isEmpty{
+                                    Toastmanager.shared.show("No data available")
+                                    return
+                                }
+                            ShowBottomSheet = true
+                            }
+                        }
                     
-                // }
+                }
                 
                 
                 VStack {
