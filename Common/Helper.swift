@@ -238,6 +238,60 @@ extension Date {
     }
 }
 
+struct YearPickerSheet: View {
+
+    @Binding var selectedDate: Date?
+    @Binding var showPicker: Bool
+    @Binding var year: Int
+
+    var body: some View {
+        VStack(spacing: 0) {
+
+            HStack {
+                Button("Cancel") {
+                    showPicker = false
+                }
+                .foregroundColor(.appPrimary)
+                .fontWeight(.bold)
+
+                Spacer()
+
+                Button("Done") {
+                    var components = DateComponents()
+                    components.year = year
+                    components.month = 1
+                    components.day = 1
+
+                    selectedDate = Calendar.current.date(from: components)
+                    showPicker = false
+                }
+                .foregroundColor(.appPrimary)
+                .fontWeight(.bold)
+            }
+            .padding()
+
+            Divider()
+
+            Spacer()
+
+            YearPicker(selectedYear: $year)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .frame(height: 200)
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemBackground))
+        .onAppear {
+            if let existingDate = selectedDate {
+                year = Calendar.current.component(.year, from: existingDate)
+            } else {
+                year = Calendar.current.component(.year, from: Date())
+            }
+        }
+    }
+}
+
 
 //
 //struct CustomAlertModifier: ViewModifier {
