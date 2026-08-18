@@ -21,6 +21,7 @@ class AuthenticationViewModel: ObservableObject {
     @Published var changePwdData: passwordResponse?
     @Published var ImageData: getImageData?
     @Published var logout: logoutData?
+    @Published var uploadedImageURL: String?
     
     func SignIn(username: String, password: String) async {
     

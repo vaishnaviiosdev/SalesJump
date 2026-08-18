@@ -15,6 +15,10 @@
 		383365E4302C9A8D0054B736 /* MasterSyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383365E3302C9A8D0054B736 /* MasterSyncViewModel.swift */; };
 		383365E6302C9AAB0054B736 /* MasterSyncModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383365E5302C9AAB0054B736 /* MasterSyncModel.swift */; };
 		383365E8302C9BDE0054B736 /* BottomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383365E7302C9BDE0054B736 /* BottomTabBar.swift */; };
+		3848575930342A790065A453 /* LeaveFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3848575830342A790065A453 /* LeaveFormView.swift */; };
+		3848575D30342ADB0065A453 /* LeaveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3848575C30342AD10065A453 /* LeaveViewModel.swift */; };
+		3848575F30342AE60065A453 /* MenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3848575E30342ADE0065A453 /* MenuViewModel.swift */; };
+		3848576230342B7E0065A453 /* LeaveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3848576130342B7A0065A453 /* LeaveModel.swift */; };
 		386C56A8301722C10066DC31 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386C56A7301722C10066DC31 /* WelcomeView.swift */; };
 		386C56B9301734350066DC31 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386C56B8301730C50066DC31 /* Helper.swift */; };
 		386C56BA301735820066DC31 /* WorkSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 386C56B130172C060066DC31 /* WorkSans-Medium.ttf */; };
@@ -54,6 +58,10 @@
 		383365E3302C9A8D0054B736 /* MasterSyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterSyncViewModel.swift; sourceTree = "<group>"; };
 		383365E5302C9AAB0054B736 /* MasterSyncModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterSyncModel.swift; sourceTree = "<group>"; };
 		383365E7302C9BDE0054B736 /* BottomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabBar.swift; sourceTree = "<group>"; };
+		3848575830342A790065A453 /* LeaveFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveFormView.swift; sourceTree = "<group>"; };
+		3848575C30342AD10065A453 /* LeaveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveViewModel.swift; sourceTree = "<group>"; };
+		3848575E30342ADE0065A453 /* MenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewModel.swift; sourceTree = "<group>"; };
+		3848576130342B7A0065A453 /* LeaveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveModel.swift; sourceTree = "<group>"; };
 		386C568930171FC90066DC31 /* SalesJump.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SalesJump.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		386C56A7301722C10066DC31 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		386C56AD30172BD90066DC31 /* WorkSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WorkSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -127,6 +135,39 @@
 			path = MasterSync;
 			sourceTree = "<group>";
 		};
+		3848575730342A600065A453 /* Leave */ = {
+			isa = PBXGroup;
+			children = (
+				3848575830342A790065A453 /* LeaveFormView.swift */,
+			);
+			path = Leave;
+			sourceTree = "<group>";
+		};
+		3848575A30342ABC0065A453 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				3848575E30342ADE0065A453 /* MenuViewModel.swift */,
+				3848575B30342ACB0065A453 /* Leave */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		3848575B30342ACB0065A453 /* Leave */ = {
+			isa = PBXGroup;
+			children = (
+				3848575C30342AD10065A453 /* LeaveViewModel.swift */,
+			);
+			path = Leave;
+			sourceTree = "<group>";
+		};
+		3848576030342B730065A453 /* Leave */ = {
+			isa = PBXGroup;
+			children = (
+				3848576130342B7A0065A453 /* LeaveModel.swift */,
+			);
+			path = Leave;
+			sourceTree = "<group>";
+		};
 		386C568030171FC90066DC31 = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +202,7 @@
 		386C56A1301721090066DC31 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3848576030342B730065A453 /* Leave */,
 				386C56A5301721440066DC31 /* Authentication */,
 			);
 			path = Model;
@@ -179,6 +221,7 @@
 		386C56A33017211B0066DC31 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				3848575A30342ABC0065A453 /* Menu */,
 				386C56A63017214E0066DC31 /* Authentication */,
 			);
 			path = ViewModel;
@@ -268,6 +311,7 @@
 		3884265B302AF48C002943B9 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				3848575730342A600065A453 /* Leave */,
 				3884265C302AF4B6002943B9 /* MenuView.swift */,
 			);
 			path = Menu;
@@ -355,10 +399,12 @@
 				388C567F3019D204002C252C /* SettingsView.swift in Sources */,
 				3880E0173018CCAE00075E50 /* NetworkManager.swift in Sources */,
 				386C56C1301739210066DC31 /* Common.swift in Sources */,
+				3848575F30342AE60065A453 /* MenuViewModel.swift in Sources */,
 				3881C99A3021F9A300369C3E /* ChangePwdView.swift in Sources */,
 				3881C9983021EE5A00369C3E /* demoView.swift in Sources */,
 				3880E0113018B66300075E50 /* AuthenticationModel.swift in Sources */,
 				3884265D302AF4B6002943B9 /* MenuView.swift in Sources */,
+				3848575930342A790065A453 /* LeaveFormView.swift in Sources */,
 				386C56B9301734350066DC31 /* Helper.swift in Sources */,
 				38C718FF302EDB2D0005DAD3 /* UserSetup.swift in Sources */,
 				3827F9EA3032D16200F665F3 /* MyDayPlanView.swift in Sources */,
@@ -366,6 +412,7 @@
 				383365E6302C9AAB0054B736 /* MasterSyncModel.swift in Sources */,
 				386C56C330174F020066DC31 /* LoginView.swift in Sources */,
 				383365E2302C9A6E0054B736 /* MasterSyncView.swift in Sources */,
+				3848575D30342ADB0065A453 /* LeaveViewModel.swift in Sources */,
 				383365E4302C9A8D0054B736 /* MasterSyncViewModel.swift in Sources */,
 				387443D730247C00008EFC66 /* LocationViewModel.swift in Sources */,
 				38C7198D302F19FA0005DAD3 /* ToastManager.swift in Sources */,
@@ -375,6 +422,7 @@
 				387A87973025CF7200B533FB /* DashboardModel.swift in Sources */,
 				3827F9EC3032DAD800F665F3 /* SelectionFieldView.swift in Sources */,
 				3880E01B3018D5D400075E50 /* Constant.swift in Sources */,
+				3848576230342B7E0065A453 /* LeaveModel.swift in Sources */,
 				386C56A8301722C10066DC31 /* WelcomeView.swift in Sources */,
 				387A87993025D00000B533FB /* DashboardViewModel.swift in Sources */,
 				388C569D301A0BDA002C252C /* CoreDataManager.swift in Sources */,

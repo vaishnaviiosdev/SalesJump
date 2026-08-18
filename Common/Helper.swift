@@ -203,6 +203,12 @@ struct ToastView: View {
     }
 }
 
+func getTodayDateTime() -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    return formatter.string(from: Date())
+}
+
 func isValidPassword(_ password: String) -> Bool {
 
     let passwordRegex =
@@ -217,6 +223,15 @@ func getTodayDate() -> String {
     formatter.dateFormat = "yyyy-MM-dd"
     return formatter.string(from: Date())
 }
+
+extension Date {
+    func formattedString(format: String = "dd MMM yyyy") -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        return formatter.string(from: self)
+    }
+}
+
 
 //
 //struct CustomAlertModifier: ViewModifier {
