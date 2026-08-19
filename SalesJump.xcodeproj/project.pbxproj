@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3823B38A3035CC0C00676D64 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3823B3893035CC0C00676D64 /* AudioRecorder.swift */; };
+		3823B38C3035D2DD00676D64 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3823B38B3035D2DD00676D64 /* AudioPlayerManager.swift */; };
 		3827F9EA3032D16200F665F3 /* MyDayPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827F9E93032D16200F665F3 /* MyDayPlanView.swift */; };
 		3827F9EC3032DAD800F665F3 /* SelectionFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827F9EB3032DAD800F665F3 /* SelectionFieldView.swift */; };
 		3827F9EE3032DB7200F665F3 /* MyDayPlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827F9ED3032DB7200F665F3 /* MyDayPlanViewModel.swift */; };
@@ -50,6 +52,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3823B3893035CC0C00676D64 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		3823B38B3035D2DD00676D64 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		3827F9E93032D16200F665F3 /* MyDayPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayPlanView.swift; sourceTree = "<group>"; };
 		3827F9EB3032DAD800F665F3 /* SelectionFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionFieldView.swift; sourceTree = "<group>"; };
 		3827F9ED3032DB7200F665F3 /* MyDayPlanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayPlanViewModel.swift; sourceTree = "<group>"; };
@@ -271,6 +275,8 @@
 				3880E0163018CB9B00075E50 /* NetworkManager.swift */,
 				38C7198C302F19FA0005DAD3 /* ToastManager.swift */,
 				3827FA1A3033361D00F665F3 /* faceCaptureCamera.swift */,
+				3823B3893035CC0C00676D64 /* AudioRecorder.swift */,
+				3823B38B3035D2DD00676D64 /* AudioPlayerManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -420,6 +426,8 @@
 				388D482A30332E32004497E3 /* LeaveViewModel.swift in Sources */,
 				383365E6302C9AAB0054B736 /* MasterSyncModel.swift in Sources */,
 				386C56C330174F020066DC31 /* LoginView.swift in Sources */,
+				3823B38C3035D2DD00676D64 /* AudioPlayerManager.swift in Sources */,
+				3823B38A3035CC0C00676D64 /* AudioRecorder.swift in Sources */,
 				383365E2302C9A6E0054B736 /* MasterSyncView.swift in Sources */,
 				383365E4302C9A8D0054B736 /* MasterSyncViewModel.swift in Sources */,
 				387443D730247C00008EFC66 /* LocationViewModel.swift in Sources */,
@@ -579,12 +587,13 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We use your location fetch your current location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "For requesting location while the app is in use";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to automatically detect your current location";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access to record audio.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -617,12 +626,13 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We use your location fetch your current location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "For requesting location while the app is in use";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to automatically detect your current location";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access to record audio.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

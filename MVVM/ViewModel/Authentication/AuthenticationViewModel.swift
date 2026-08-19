@@ -421,6 +421,14 @@ class AuthenticationViewModel: ObservableObject {
                 return
             }
             let context = CoreDataStack.shared.newBackgroundContext()
+            
+            let request: NSFetchRequest<MyDayPlanEntity> = MyDayPlanEntity.fetchRequest()
+            let oldRecords = try context.fetch(request)
+
+            for record in oldRecords {
+                context.delete(record)
+            }
+            
             let entity = MyDayPlanEntity(context: context)
             entity.isMyDayPlan = result.isMyDayPlan ?? false
             entity.tpList = try? JSONEncoder().encode(result.tpList)
@@ -471,11 +479,20 @@ class AuthenticationViewModel: ObservableObject {
             let result = try JSONDecoder().decode(AppSetupResponse.self,from: data)
             
             let context = CoreDataStack.shared.newBackgroundContext()
+            let request: NSFetchRequest<AppSetupEntity> = AppSetupEntity.fetchRequest()
+            let oldRecords = try context.fetch(request)
+
+            for record in oldRecords {
+                context.delete(record)
+            }
+
             let entity = AppSetupEntity(context: context)
 
             guard let setup = result.data?.first else {
                 return
             }
+            
+            print(setup)
 
             entity.sfCode = setup.SF_Code
             entity.setupData = try JSONEncoder().encode(setup)
@@ -490,7 +507,7 @@ class AuthenticationViewModel: ObservableObject {
                     from: data
                 )
 
-                print(setup?.GEOTagNeed ?? "")
+                print(setup?.IsDistributorBased ?? "")
                 print(setup?.beat_optimization_need ?? "")
             }
            

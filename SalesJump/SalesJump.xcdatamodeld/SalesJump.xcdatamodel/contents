@@ -25,34 +25,9 @@
         <attribute name="tpList" optional="YES" attributeType="Binary"/>
     </entity>
     <entity name="RetailerEntity" representedClassName="RetailerEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="addrs" optional="YES" attributeType="String"/>
-        <attribute name="contactPersion" optional="YES" attributeType="String"/>
-        <attribute name="createdDate" optional="YES" attributeType="String"/>
-        <attribute name="creditDays" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="creditLimit" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="debtorCode" optional="YES" attributeType="String"/>
-        <attribute name="distributorCode" optional="YES" attributeType="String"/>
-        <attribute name="docCatCode" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="docSpecialCode" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="doctorActiveFlag" optional="YES" attributeType="String"/>
-        <attribute name="doctorCode" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="gst" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="image" optional="YES" attributeType="String"/>
-        <attribute name="imageUrl" optional="YES" attributeType="String"/>
-        <attribute name="lat" optional="YES" attributeType="String"/>
-        <attribute name="listedDrAddress1" optional="YES" attributeType="String"/>
-        <attribute name="listedDrEmail" optional="YES" attributeType="String"/>
-        <attribute name="listedDrSlNo" optional="YES" attributeType="String"/>
-        <attribute name="long" optional="YES" attributeType="String"/>
-        <attribute name="mobileNumber" optional="YES" attributeType="String"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="outstandingAmount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="retailerCategory" optional="YES" attributeType="String"/>
-        <attribute name="retailerClass" optional="YES" attributeType="String"/>
-        <attribute name="specDocCode" optional="YES" attributeType="String"/>
-        <attribute name="townCode" optional="YES" attributeType="String"/>
-        <attribute name="townName" optional="YES" attributeType="String"/>
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="masterName" optional="YES" attributeType="String"/>
+        <attribute name="retailer" optional="YES" attributeType="Binary"/>
     </entity>
     <entity name="RouteEntity" representedClassName="RouteEntity" syncable="YES" codeGenerationType="class">
         <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

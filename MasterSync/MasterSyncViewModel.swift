@@ -193,12 +193,18 @@ class MasterSyncViewModel: ObservableObject {
             case "retailer":
                 let items = try JSONDecoder().decode(RetailerResponse.self,from: data)
                 let context = CoreDataStack.shared.newBackgroundContext()
-
+                
                 await context.perform {
                     do {
-                        items.response.forEach {RetailerEntity.saveOrUpdate(from: $0,context: context)
+        let request: NSFetchRequest<RetailerEntity> = RetailerEntity.fetchRequest()
+        let oldRecords = try context.fetch(request)
+            for item in oldRecords {
+                            context.delete(item)
                         }
-
+                        let entity = RetailerEntity(context: context)
+                        entity.retailer = try JSONEncoder().encode(items.response)
+                        entity.lastUpdated = Date()
+                        entity.masterName = items.masterName
                         if context.hasChanges {
                             try context.save()
                         }
@@ -212,6 +218,14 @@ class MasterSyncViewModel: ObservableObject {
                 let context = CoreDataStack.shared.newBackgroundContext()
                 await context.perform {
                     do {
+                        
+                        let request: NSFetchRequest<SubordinateEntity> = SubordinateEntity.fetchRequest()
+                        let oldRecords = try context.fetch(request)
+                            for item in oldRecords {
+                                            context.delete(item)
+                            }
+
+                        
                         let entity = SubordinateEntity(context: context)
                         entity.subordinate = try JSONEncoder().encode(items.response)
                         if context.hasChanges {
@@ -227,6 +241,12 @@ class MasterSyncViewModel: ObservableObject {
                 let context = CoreDataStack.shared.newBackgroundContext()
                 await context.perform {
                     do {
+                        
+                        let request: NSFetchRequest<WorkTypeEntity> = WorkTypeEntity.fetchRequest()
+                        let oldRecords = try context.fetch(request)
+                            for item in oldRecords {
+                                            context.delete(item)
+                            }
                         let entity = WorkTypeEntity(context: context)
                         entity.workType = try JSONEncoder().encode(items.response)
                         entity.lastUpdated = Date()
@@ -245,6 +265,11 @@ class MasterSyncViewModel: ObservableObject {
                 let context = CoreDataStack.shared.newBackgroundContext()
                 await context.perform {
                     do {
+                        let request: NSFetchRequest<DistributorEntity> = DistributorEntity.fetchRequest()
+                        let oldRecords = try context.fetch(request)
+                            for item in oldRecords {
+                                            context.delete(item)
+                            }
                         let entity = DistributorEntity(context: context)
                         entity.distributor = try JSONEncoder().encode(items.response)
                         entity.lastUpdated = Date()
@@ -261,6 +286,13 @@ class MasterSyncViewModel: ObservableObject {
                 let context = CoreDataStack.shared.newBackgroundContext()
                 await context.perform {
                     do {
+                        
+                        let request: NSFetchRequest<RouteEntity> = RouteEntity.fetchRequest()
+                        let oldRecords = try context.fetch(request)
+                            for item in oldRecords {
+                                            context.delete(item)
+                            }
+                        
                         let entity = RouteEntity(context: context)
                         entity.route = try JSONEncoder().encode(items.response)
                         entity.lastUpdated = Date()
@@ -278,6 +310,12 @@ class MasterSyncViewModel: ObservableObject {
                 let context = CoreDataStack.shared.newBackgroundContext()
                 await context.perform {
                     do {
+                        
+                        let request: NSFetchRequest<JointworkEntity> = JointworkEntity.fetchRequest()
+                        let oldRecords = try context.fetch(request)
+                     for item in oldRecords {
+                                context.delete(item)
+                            }
                         let entity = JointworkEntity(context: context)
                         entity.jointwork = try JSONEncoder().encode(items.response)
                         entity.lastUpdated = Date()
@@ -396,49 +434,5 @@ class MasterSyncViewModel: ObservableObject {
                 print("Clear Data Error: \(error)")
             }
         }
-    }
-}
-
-
-extension RetailerEntity {
-    
-    static func saveOrUpdate(from response: Retailer, context: NSManagedObjectContext) {
-        
-        guard let responseId = response.id else { return }
-        
-        let fetchRequest: NSFetchRequest<RetailerEntity> = RetailerEntity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %d", responseId)
-        fetchRequest.fetchLimit = 1
-        
-        let entity = (try? context.fetch(fetchRequest))?.first ?? RetailerEntity(context: context)
-        
-        entity.id = Int64(response.id ?? 0)
-        entity.name = response.name
-        entity.townCode = response.townCode
-        entity.townName = response.townName
-        entity.image = response.image
-        entity.outstandingAmount = response.outstandingAmount ?? 0.0
-        entity.lat = response.lat
-        entity.long = response.long
-        entity.addrs = response.addrs
-        entity.listedDrAddress1 = response.listedDrAddress1
-        entity.listedDrSlNo = response.listedDrSlNo
-        entity.mobileNumber = response.mobileNumber
-        entity.docCatCode = Int64(response.docCatCode ?? 0)
-        entity.contactPersion = response.contactPersion
-        entity.docSpecialCode = Int64(response.docSpecialCode ?? 0)
-        entity.distributorCode = response.distributorCode
-        entity.doctorCode = Int64(response.doctorCode ?? 0)
-        entity.gst = response.gst
-        entity.createdDate = response.createdDate
-        entity.doctorActiveFlag = response.doctorActiveFlag
-        entity.listedDrEmail = response.listedDrEmail
-        entity.specDocCode = response.specDocCode
-        entity.debtorCode = response.debtorCode
-        entity.creditLimit = response.creditLimit ?? 0.0
-        entity.creditDays = response.creditDays ?? 0.0
-        entity.retailerCategory = response.retailerCategory
-        entity.retailerClass = response.retailerClass
-        entity.imageUrl = response.imageUrl
     }
 }
