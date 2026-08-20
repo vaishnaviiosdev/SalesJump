@@ -8,7 +8,6 @@
 import SwiftUI
 import AVFAudio
 
-@available(iOS 17.0, *)
 struct MyDayPlanView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var viewModel = MyDayPlanViewModel()
@@ -20,13 +19,12 @@ struct MyDayPlanView: View {
     @State private var showCamera = false
     @State private var capturedImage: UIImage?
     @StateObject private var player = AudioPlayerManager()
-  
     
     var body: some View {
         ZStack{
             if colorScheme == .dark {
                 Color(.systemGroupedBackground)
-            }else {
+            }else{
                 Color(UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 1.00))
             }
             
@@ -527,7 +525,6 @@ struct MyDayPlanView: View {
                     }.padding(10)
                     
                 }
-                
                 Spacer()
                 
                 VStack {
@@ -798,7 +795,6 @@ struct WorkWithView: View {
 
 
 
-@available(iOS 17.0, *)
 struct RemarkView: View {
     @Binding  var remarks:String
     @Binding var audioFilePath: String
