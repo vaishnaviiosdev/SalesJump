@@ -18,6 +18,7 @@ enum MenuRoute: Hashable {
     case circular
     case missedDateEntry
     case leaveForm
+    case leaveHistory
 }
 
 struct MenuView: View {
@@ -393,6 +394,9 @@ struct MenuView: View {
                     
                 case .leaveForm:
                     LeaveFormView()
+                    
+                case .leaveHistory:
+                    LeaveHistoryView()
                 }
             }
         }
@@ -532,7 +536,16 @@ struct MenuView: View {
                             subMenuRow(item: item)
                         }
 
-                    } else {
+                    }
+                    else if item.title == "Leave History" {
+
+                        NavigationLink(value: MenuRoute.leaveHistory) {
+
+                            subMenuRow(item: item)
+                        }
+
+                    }
+                    else {
 
                         Button {
                             print("Navigate to:", item.title)

@@ -25,6 +25,7 @@ struct LeaveFormView: View {
     @StateObject private var authenVM = AuthenticationViewModel()
     @State private var uploadedImageURL: String?
     @State private var isLoading = false
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
 
@@ -57,22 +58,34 @@ struct LeaveFormView: View {
                         showsIndicators: false
                     ) {
                         LeaveTypeView(vm: vm, selectedLeaveType: $selectedLeaveType, selectedLeaveTypeID: $selectedLeaveTypeID)
+                            .padding(.horizontal, 16)
                         
                         LeaveDateView(
-                                FromDate: $FromDate,
-                                selectedDayType: $selectedDayType,
-                                selectedHalf: $selectedHalf
-                            )
+                            FromDate: $FromDate,
+                            selectedDayType: $selectedDayType,
+                            selectedHalf: $selectedHalf
+                        ) {
+                            if selectedLeaveType == nil ||
+                                selectedLeaveType?
+                                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                                    .isEmpty == true {
+
+                                toastManager.showToast("Please Select Leave Type")
+                            }
+                        }
+                        .padding(.horizontal, 16)
                         
                         Spacer().frame(height: 10)
                         
                         LeaveReasonView(reasonText: $reasonText)
+                            .padding(.horizontal, 16)
                         
                         Attachment(
                             vm: authenVM, selectedItem: $selectedItem,
                             selectedImage: $selectedImage,
                             fileName: $fileName
                         )
+                        .padding(.horizontal, 16)
                     }
 
                     Spacer()
@@ -119,12 +132,15 @@ struct LeaveFormView: View {
                                 halfDay: halfDayValue,
                                 leaveType: leaveTypeID,
                                 noofDays: noOfDays,
-                                reason: reasonText
+                                reason: reasonText,
+                                imageUrl: authenVM.uploadedImageURL ?? "",
+                                fileName: authenVM.fileName ?? ""
                             )
                         }
                     }
+                    .padding(.horizontal, 16)
                 }
-                .padding(.horizontal, 16)
+                toastOverlay
             }
             .task {
                 await vm.fetchLeaveType()
@@ -136,6 +152,24 @@ struct LeaveFormView: View {
                     )
             .navigationBarBackButtonHidden(true)
         }
+    }
+    
+    private var toastOverlay: some View {
+        VStack {
+            if leaveVM.showSaveSuccessAlert {
+                ToastView(message: leaveVM.saveSuccessMessage)
+                    .padding(.bottom, 20)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            withAnimation { leaveVM.showSaveSuccessAlert = false
+                            }
+                            dismiss()
+                        }
+                    }
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
     
     private func apiDateString(from date: Date) -> String {
@@ -255,37 +289,42 @@ struct LeaveTypeView: View {
 }
 
 struct LeaveDateView: View {
-    
     @Binding var FromDate: Date?
     @Binding var selectedDayType: String
     @Binding var selectedHalf: String?
-    
+
+    var onDateSelected: () -> Void
+
     @State private var leaveDate = "Leave Date"
     @State private var selectedLeaveDate = ""
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            
+
             HStack {
                 Login_TxtfieldName(
                     titleName: $leaveDate,
                     foreGroundColour: .gray,
                     fontSize: 13
                 )
-                
+
                 Spacer()
             }
-            
+
             CustommDatePicker(
                 selectedDate: $FromDate,
                 selectedDayType: $selectedDayType,
-                selectedDateText: $selectedLeaveDate, selectedHalf: $selectedHalf,
+                selectedDateText: $selectedLeaveDate,
+                selectedHalf: $selectedHalf,
                 SelectMod: "F",
                 placeholder: "Select a Date"
             )
-            
+            .onTapGesture {
+                onDateSelected()
+            }
+
             Spacer().frame(height: 5)
-            
+
             if FromDate != nil {
                 HStack {
                     Text(
@@ -408,7 +447,7 @@ struct Attachment: View {
                     Spacer()
 
                     Button {
-                        print("Download \(uploadedURL)")
+                        downloadImage(from: uploadedURL)
                     } label: {
 
                         Image(systemName: "arrow.down.circle.fill")
@@ -452,10 +491,12 @@ struct Attachment: View {
                     let image = UIImage(data: data) {
 
                         selectedImage = image
-
+                        
+                        startLoading()
                         await vm.uploadImage(
                             selectedImage: image
                         )
+                        stopLoading()
                     }
 
                 }
@@ -464,6 +505,56 @@ struct Attachment: View {
                         "Image loading failed: \(error.localizedDescription)"
                     )
                 }
+            }
+        }
+        .loadingOverlay(
+                    isLoading,
+                    text: "Loading..."
+                )
+    }
+    
+    private func startLoading() {
+        isLoading = true
+    }
+    
+    private func stopLoading() {
+        isLoading = false
+    }
+    
+    private func downloadImage(from urlString: String) {
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+
+        Task {
+            do {
+                let (data, response) = try await URLSession.shared.data(from: url)
+
+                guard let httpResponse = response as? HTTPURLResponse,
+                      200...299 ~= httpResponse.statusCode else {
+                    print("Download failed")
+                    return
+                }
+
+                guard let image = UIImage(data: data) else {
+                    print("Unable to convert data to image")
+                    return
+                }
+
+                await MainActor.run {
+                    UIImageWriteToSavedPhotosAlbum(
+                        image,
+                        nil,
+                        nil,
+                        nil
+                    )
+
+                    print("Image saved successfully")
+                }
+
+            } catch {
+                print("Download error: \(error.localizedDescription)")
             }
         }
     }

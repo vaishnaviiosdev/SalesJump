@@ -11,6 +11,7 @@ struct Login_TxtfieldName: View {
     @Binding var titleName: String
     var foreGroundColour: Color = .appTextGrey
     var fontSize: CGFloat = 12
+    var starColor: Color = .red
     
     var body: some View {
         HStack(spacing: 0) {
@@ -19,7 +20,7 @@ struct Login_TxtfieldName: View {
                 .foregroundColor(foreGroundColour)
             
             Text("*")
-                .foregroundColor(.appRed)
+                .foregroundColor(starColor)
         }
     }
 }

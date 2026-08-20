@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3823B38A3035CC0C00676D64 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3823B3893035CC0C00676D64 /* AudioRecorder.swift */; };
 		3823B38C3035D2DD00676D64 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3823B38B3035D2DD00676D64 /* AudioPlayerManager.swift */; };
+		381C79AF30346E9D00EB0C07 /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381C79AE30346E9200EB0C07 /* PickerView.swift */; };
 		3827F9EA3032D16200F665F3 /* MyDayPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827F9E93032D16200F665F3 /* MyDayPlanView.swift */; };
 		3827F9EC3032DAD800F665F3 /* SelectionFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827F9EB3032DAD800F665F3 /* SelectionFieldView.swift */; };
 		3827F9EE3032DB7200F665F3 /* MyDayPlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827F9ED3032DB7200F665F3 /* MyDayPlanViewModel.swift */; };
@@ -17,6 +18,7 @@
 		383365E4302C9A8D0054B736 /* MasterSyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383365E3302C9A8D0054B736 /* MasterSyncViewModel.swift */; };
 		383365E6302C9AAB0054B736 /* MasterSyncModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383365E5302C9AAB0054B736 /* MasterSyncModel.swift */; };
 		383365E8302C9BDE0054B736 /* BottomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383365E7302C9BDE0054B736 /* BottomTabBar.swift */; };
+		38485775303439190065A453 /* LeaveHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38485774303439190065A453 /* LeaveHistoryView.swift */; };
 		386C56A8301722C10066DC31 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386C56A7301722C10066DC31 /* WelcomeView.swift */; };
 		386C56B9301734350066DC31 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386C56B8301730C50066DC31 /* Helper.swift */; };
 		386C56BA301735820066DC31 /* WorkSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 386C56B130172C060066DC31 /* WorkSans-Medium.ttf */; };
@@ -54,6 +56,7 @@
 /* Begin PBXFileReference section */
 		3823B3893035CC0C00676D64 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		3823B38B3035D2DD00676D64 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
+		381C79AE30346E9200EB0C07 /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
 		3827F9E93032D16200F665F3 /* MyDayPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayPlanView.swift; sourceTree = "<group>"; };
 		3827F9EB3032DAD800F665F3 /* SelectionFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionFieldView.swift; sourceTree = "<group>"; };
 		3827F9ED3032DB7200F665F3 /* MyDayPlanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayPlanViewModel.swift; sourceTree = "<group>"; };
@@ -62,6 +65,7 @@
 		383365E3302C9A8D0054B736 /* MasterSyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterSyncViewModel.swift; sourceTree = "<group>"; };
 		383365E5302C9AAB0054B736 /* MasterSyncModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterSyncModel.swift; sourceTree = "<group>"; };
 		383365E7302C9BDE0054B736 /* BottomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabBar.swift; sourceTree = "<group>"; };
+		38485774303439190065A453 /* LeaveHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveHistoryView.swift; sourceTree = "<group>"; };
 		386C568930171FC90066DC31 /* SalesJump.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SalesJump.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		386C56A7301722C10066DC31 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		386C56AD30172BD90066DC31 /* WorkSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WorkSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -267,6 +271,7 @@
 		3880E0143018C62F00075E50 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				381C79AE30346E9200EB0C07 /* PickerView.swift */,
 				387443D83024822D008EFC66 /* PermissionManager.swift */,
 				387443D630247BF8008EFC66 /* LocationViewModel.swift */,
 				388C569E301A1D42002C252C /* SessionManager.swift */,
@@ -302,6 +307,7 @@
 			isa = PBXGroup;
 			children = (
 				389298F23030509E009821A8 /* LeaveFormView.swift */,
+				38485774303439190065A453 /* LeaveHistoryView.swift */,
 			);
 			path = Leave;
 			sourceTree = "<group>";
@@ -425,6 +431,7 @@
 				387443D93024823B008EFC66 /* PermissionManager.swift in Sources */,
 				388D482A30332E32004497E3 /* LeaveViewModel.swift in Sources */,
 				383365E6302C9AAB0054B736 /* MasterSyncModel.swift in Sources */,
+				38485775303439190065A453 /* LeaveHistoryView.swift in Sources */,
 				386C56C330174F020066DC31 /* LoginView.swift in Sources */,
 				3823B38C3035D2DD00676D64 /* AudioPlayerManager.swift in Sources */,
 				3823B38A3035CC0C00676D64 /* AudioRecorder.swift in Sources */,
@@ -438,6 +445,7 @@
 				387A87973025CF7200B533FB /* DashboardModel.swift in Sources */,
 				3827F9EC3032DAD800F665F3 /* SelectionFieldView.swift in Sources */,
 				3880E01B3018D5D400075E50 /* Constant.swift in Sources */,
+				381C79AF30346E9D00EB0C07 /* PickerView.swift in Sources */,
 				386C56A8301722C10066DC31 /* WelcomeView.swift in Sources */,
 				389298FA303060CA009821A8 /* MenuViewModel.swift in Sources */,
 				387A87993025D00000B533FB /* DashboardViewModel.swift in Sources */,
@@ -588,6 +596,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "For requesting location while the app is in use";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to automatically detect your current location";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access to record audio.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need access to save downloaded images to your Photos.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -627,6 +636,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "For requesting location while the app is in use";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to automatically detect your current location";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access to record audio.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need access to save downloaded images to your Photos.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
