@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+import AVFAudio
 
+@available(iOS 17.0, *)
 struct MyDayPlanView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var viewModel = MyDayPlanViewModel()
@@ -17,6 +19,8 @@ struct MyDayPlanView: View {
 
     @State private var showCamera = false
     @State private var capturedImage: UIImage?
+    @StateObject private var player = AudioPlayerManager()
+  
     
     var body: some View {
         ZStack{
@@ -65,17 +69,19 @@ struct MyDayPlanView: View {
                             
                         }
                         
-                        
-                        SelectionFieldView(title: "Head Quater",value: viewModel.HeadQuarterName == "" ? "Select" : viewModel.HeadQuarterName,isMandatory: true) {
-                            print("Head Quater")
-                            
-                            viewModel.ShowHQsheet = true
+                        if SessionManager.shared.SF_Type == "2" {
+                            SelectionFieldView(title: "Head Quater",value: viewModel.HeadQuarterName == "" ? "Select" : viewModel.HeadQuarterName,isMandatory: true) {
+                                print("Head Quater")
+                                
+                                viewModel.ShowHQsheet = true
+                            }
                         }
-                        
                         // Setup Based Name Was Change
-                        SelectionFieldView(title: "Distributor",value: viewModel.DistributorName == "" ? "Select" : viewModel.DistributorName,isMandatory: true) {
-                            print("Distributor")
-                            viewModel.ShowDistributorsheet = true
+                        if UserSetup.shared.IsDistributorBased == true {
+                            SelectionFieldView(title: "Distributor",value: viewModel.DistributorName == "" ? "Select" : viewModel.DistributorName,isMandatory: true) {
+                                print("Distributor")
+                                viewModel.ShowDistributorsheet = true
+                            }
                         }
                         
                         // Setup Based Name Was Change
@@ -85,8 +91,167 @@ struct MyDayPlanView: View {
                         }
                         
                         // Setup Based Name Was Change
-                        SelectionFieldView(title: "Outlet",value:"Select",isMandatory: true) {
-                            print("Outlet")
+                        VStack{
+                            SelectionFieldView(title: "Outlet",value:"Select",isMandatory: true) {
+                                print("Outlet")
+                                viewModel.ShowRetailerSheet = true
+                            }
+                            
+                            
+                            if viewModel.SelecetdRetailer != nil{
+                                VStack{
+                                    
+                                    if isPad {
+                                        
+                                        HStack(spacing: 8) {
+                                            ForEach(Array((viewModel.SelecetdRetailer ?? []).prefix(3)), id: \.id) { retailer in
+                                                
+                                                HStack {
+                                                    Text(retailer.name ?? "")
+                                                        .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                        .foregroundStyle(colorScheme == .dark ? .white : Color.appPrimary)
+                                                        .padding(.leading, 6)
+                                                    
+                                                    Image("Close Button (1)")
+                                                        .resizable()
+                                                        .frame(width: isPad ? 26 : 16,
+                                                               height: isPad ? 26 : 16)
+                                                        .padding(.trailing, 6)
+                                                        .onTapGesture{
+                                                            if let index = viewModel.SelecetdRetailer?.firstIndex(where: { $0.id == retailer.id }) {
+                                                                viewModel.SelecetdRetailer?.remove(at: index)
+                                                            }
+                                                        }
+                                                }
+                                                .frame(height: isPad ? 42 : 32)
+                                                .background(
+                                                    colorScheme == .dark
+                                                    ? Color(.systemGray5)
+                                                    : Color.appPrimaryLight
+                                                )
+                                                .cornerRadius(4)
+                                                
+                                            }
+                                            let count = viewModel.SelecetdRetailer?.count ?? 0
+                                            if count > 3 {
+                                                Text("+\(count - 3) More")
+                                                    .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                    .foregroundStyle(colorScheme == .dark ? .white : Color.appPrimary)
+                                                    .padding(.horizontal, 10)
+                                                    .frame(height: isPad ? 42 : 32)
+                                                    .background(
+                                                        colorScheme == .dark
+                                                        ? Color(.systemGray5)
+                                                        : Color.appPrimaryLight
+                                                    )
+                                                    .cornerRadius(4)
+                                                    .onTapGesture {
+                                                        viewModel.ShowRetailerSheet = true
+                                                    }
+                                            }
+                                            Spacer()
+                                        }
+                                    }else{
+                                        
+                                        VStack{
+                                            HStack(spacing: 8) {
+                                                ForEach(Array((viewModel.SelecetdRetailer ?? []).prefix(2)), id: \.id) { retailer in
+                                                    
+                                                    HStack {
+                                                        Text(retailer.name ?? "")
+                                                            .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                            .foregroundStyle(colorScheme == .dark ? .white : Color.appPrimary)
+                                                            .padding(.leading, 6)
+                                                        
+                                                        Image("Close Button (1)")
+                                                            .resizable()
+                                                            .frame(width: isPad ? 26 : 16,
+                                                                   height: isPad ? 26 : 16)
+                                                            .padding(.trailing, 6)
+                                                            .onTapGesture{
+                                                                
+                                                                if let index = viewModel.SelecetdRetailer?.firstIndex(where: { $0.id == retailer.id }) {
+                                                                    viewModel.SelecetdRetailer?.remove(at: index)
+                                                                }
+                                                            }
+                                                    }
+                                                    .frame(height: isPad ? 42 : 32)
+                                                    .background(
+                                                        colorScheme == .dark
+                                                        ? Color(.systemGray5)
+                                                        : Color.appPrimaryLight
+                                                    )
+                                                    .cornerRadius(4)
+                                                }
+                                                Spacer()
+                                            }
+                                            
+                                            
+                                            let count = viewModel.SelecetdRetailer?.count ?? 0
+                                            if count > 2 {
+                                                HStack(spacing: 8) {
+                                                    HStack {
+                                                        Text(viewModel.SelecetdRetailer?[2].name ?? "")
+                                                            .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                            .foregroundStyle(colorScheme == .dark ? .white : Color.appPrimary)
+                                                            .padding(.leading, 6)
+                                                        
+                                                        Image("Close Button (1)")
+                                                            .resizable()
+                                                            .frame(width: isPad ? 26 : 16,
+                                                                   height: isPad ? 26 : 16)
+                                                            .padding(.trailing, 6)
+                                                            .onTapGesture{
+                                                                
+                                                                if (viewModel.SelecetdRetailer?.count ?? 0) > 2 {
+                                                                    viewModel.SelecetdRetailer?.remove(at: 2)
+                                                                }
+                                                            }
+                                                    }
+                                                    .frame(height: isPad ? 42 : 32)
+                                                    .background(
+                                                        colorScheme == .dark
+                                                        ? Color(.systemGray5)
+                                                        : Color.appPrimaryLight
+                                                    )
+                                                    .cornerRadius(4)
+                                                    
+                                                    
+                                                    
+                                                    
+                                                    if count > 3{
+                                                        if count > 3 {
+                                                            Text("+\(count - 3) More")
+                                                                .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                                .foregroundStyle(colorScheme == .dark ? .white : Color.appPrimary)
+                                                                .padding(.horizontal, 10)
+                                                                .frame(height: isPad ? 42 : 32)
+                                                                .background(
+                                                                    colorScheme == .dark
+                                                                    ? Color(.systemGray5)
+                                                                    : Color.appPrimaryLight
+                                                                )
+                                                                .cornerRadius(4)
+                                                                .onTapGesture{
+                                                                    
+                                                                    viewModel.ShowRetailerSheet = true
+                                                                    
+                                                                }
+                                                        }
+                                                    }
+                                                    Spacer()
+                                                }
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }.padding(.top,10)
+                                
+                                
+                            }
+                            
                         }
                         .padding(12)
                         .background( colorScheme == .dark ? Color(.secondarySystemBackground):Color.white)
@@ -98,11 +263,160 @@ struct MyDayPlanView: View {
                         
                         VStack {
                             if viewModel.selectedType == "Joint Work"{
-                                
-                                SelectionFieldView(title: "Joint Work",value:"Select",isMandatory: true) {
-                                    print("Joint Work")
+                                VStack{
+                                    SelectionFieldView(title: "Joint Work",value:"Select",isMandatory: true) {
+                                        print("Joint Work")
+                                        
+                                        viewModel.ShowJointWorkheet = true
+                                    }
                                     
-                                    viewModel.ShowJointWorkheet = true
+                                    
+                                    if viewModel.SelecetdJointWork != nil{
+                                        VStack{
+                                            
+                                            if isPad {
+                                                
+                                                HStack(spacing: 8) {
+                                                    ForEach(Array((viewModel.SelecetdJointWork ?? []).prefix(3)), id: \.id) { retailer in
+                                                        
+                                                        HStack {
+                                                            Text(retailer.name ?? "")
+                                                                .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                                .foregroundStyle(Color.appPrimary)
+                                                                .padding(.leading, 6)
+                                                            
+                                                            Image("Close Button (1)")
+                                                                .resizable()
+                                                                .frame(width: isPad ? 26 : 16,
+                                                                       height: isPad ? 26 : 16)
+                                                                .padding(.trailing, 6)
+                                                                .onTapGesture {
+                                                                    if let index = viewModel.SelecetdJointWork?.firstIndex(where: { $0.id == retailer.id }) {
+                                                                        viewModel.SelecetdJointWork?.remove(at: index)
+                                                                    }
+                                                                    
+                                                                }
+                                                        }
+                                                        .frame(height: isPad ? 42 : 32)
+                                                        .background(Color.appPrimaryLight)
+                                                        .cornerRadius(4)
+                                                    }
+                                                    let count = viewModel.SelecetdJointWork?.count ?? 0
+                                                    if count > 3 {
+                                                        Text("+\(count - 3) More")
+                                                            .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                            .foregroundStyle(.appPrimary)
+                                                            .padding(.horizontal, 10)
+                                                            .frame(height: isPad ? 42 : 32)
+                                                            .background(Color.appPrimaryLight)
+                                                            .cornerRadius(4)
+                                                            .onTapGesture{
+                                                                
+                                                                viewModel.ShowJointWorkheet = true
+                                                                
+                                                            }
+                                                    }
+                                                    Spacer()
+                                                }
+                                            }else{
+                                                
+                                                VStack{
+                                                    HStack(spacing: 8) {
+                                                        ForEach(Array((viewModel.SelecetdJointWork ?? []).prefix(2)), id: \.id) { retailer in
+                                                            
+                                                            HStack {
+                                                                Text(retailer.name ?? "")
+                                                                    .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                                    .foregroundStyle(colorScheme == .dark ? .white : Color.appPrimary)
+                                                                    .padding(.leading, 6)
+                                                                
+                                                                Image("Close Button (1)")
+                                                                    .resizable()
+                                                                    .frame(width: isPad ? 26 : 16,
+                                                                           height: isPad ? 26 : 16)
+                                                                    .padding(.trailing, 6)
+                                                                    .onTapGesture {
+                                                                        if let index = viewModel.SelecetdJointWork?.firstIndex(where: { $0.id == retailer.id }) {
+                                                                            viewModel.SelecetdJointWork?.remove(at: index)
+                                                                        }
+                                                                        
+                                                                    }
+                                                            }
+                                                            .frame(height: isPad ? 42 : 32)
+                                                            .background(
+                                                                colorScheme == .dark
+                                                                ? Color(.systemGray5)
+                                                                : Color.appPrimaryLight
+                                                            )
+                                                            .cornerRadius(4)
+                                                        }
+                                                        Spacer()
+                                                    }
+                                                    
+                                                    
+                                                    let count = viewModel.SelecetdJointWork?.count ?? 0
+                                                    if count > 2 {
+                                                        HStack(spacing: 8) {
+                                                            HStack {
+                                                                Text(viewModel.SelecetdJointWork?[2].name ?? "")
+                                                                    .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                                    .foregroundStyle(colorScheme == .dark ? .white : Color.appPrimary)
+                                                                    .padding(.leading, 6)
+                                                                
+                                                                Image("Close Button (1)")
+                                                                    .resizable()
+                                                                    .frame(width: isPad ? 26 : 16,
+                                                                           height: isPad ? 26 : 16)
+                                                                    .padding(.trailing, 6)
+                                                                    .onTapGesture{
+                                                                        
+                                                                        if (viewModel.SelecetdJointWork?.count ?? 0) > 2 {
+                                                                            viewModel.SelecetdJointWork?.remove(at: 2)
+                                                                        }
+                                                                    }
+                                                            }
+                                                            .frame(height: isPad ? 42 : 32)
+                                                            .background(
+                                                                colorScheme == .dark
+                                                                ? Color(.systemGray5)
+                                                                : Color.appPrimaryLight
+                                                            )
+                                                            .cornerRadius(4)
+                                                            
+                                                            
+                                                            if count > 3{
+                                                                if count > 3 {
+                                                                    Text("+\(count - 3) More")
+                                                                        .font(.poppinsSemiBold(isPad ? 16 : 14))
+                                                                        .foregroundStyle(colorScheme == .dark ? .white : Color.appPrimary)
+                                                                        .padding(.horizontal, 10)
+                                                                        .frame(height: isPad ? 42 : 32)
+                                                                        .background(
+                                                                            colorScheme == .dark
+                                                                            ? Color(.systemGray5)
+                                                                            : Color.appPrimaryLight
+                                                                        )
+                                                                        .cornerRadius(4)
+                                                                        .onTapGesture{
+                                                                            
+                                                                            viewModel.ShowJointWorkheet = true
+                                                                            
+                                                                        }
+                                                                }
+                                                            }
+                                                            Spacer()
+                                                        }
+                                                    }
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }.padding(.top,10)
+                                        
+                                        
+                                    }
+                                    
                                 }
                                 .padding(12)
                                 .background( colorScheme == .dark ? Color(.secondarySystemBackground):Color.white)
@@ -119,8 +433,61 @@ struct MyDayPlanView: View {
                         }.animation(.easeInOut(duration: 0.25), value: viewModel.selectedType)
                         
                         
-                        RemarkView(remarks: $viewModel.remarks)
+                        RemarkView(remarks: $viewModel.remarks,audioFilePath: $viewModel.audioFilePath)
                         
+                        if !viewModel.audioFilePath.isEmpty{
+                        HStack(spacing: 12) {
+                            
+                            Image(systemName:
+                                    player.isPlaying
+                                  ? "pause.fill"
+                                  : "play.fill")
+                            .resizable()
+                            .frame(
+                                width: isPad ? 30 : 20,
+                                height: isPad ? 30 : 20
+                            )
+                            .padding(.leading,8)
+                            .onTapGesture {
+                                player.playPause()
+                            }
+                            
+                            ProgressView(
+                                value: player.currentTime,
+                                total: max(player.duration, 1)
+                            )
+                            .frame(maxWidth: .infinity)
+                            
+                            Text(
+                                "\(player.timeString(player.currentTime))/\(player.timeString(player.duration))"
+                            )
+                            .font(.caption)
+                            
+                            Image(systemName: "trash.fill")
+                                .resizable()
+                                .frame(
+                                    width: isPad ? 30 : 20,
+                                    height: isPad ? 30 : 20
+                                )
+                                .foregroundColor(.red)
+                                .padding(.trailing,8)
+                                .onTapGesture {
+                                    
+                                    player.deleteAudio(at: viewModel.audioFilePath)
+                                    viewModel.audioFilePath = ""
+                                }
+                        }
+                        .frame(height: isPad ? 60 : 50)
+                        .frame(maxWidth: .infinity)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color(UIColor(red: 0.85,green: 0.85,blue: 0.85,alpha: 1.00)),lineWidth: 1
+                                       )
+                        )
+                    
+                        
+                    }
+                           
                         
                         
                         VStack(alignment: .center){
@@ -227,6 +594,10 @@ struct MyDayPlanView: View {
                     viewModel.DistributorName = item.name ?? ""
                     viewModel.DistributorID = item.id ?? 0
                     
+                    viewModel.IsDistributorBasedRouteFilter(id: String(item.id ?? 0))
+                    
+                    viewModel.RouteName = ""
+                    viewModel.RouteNameID = nil
                     
                 }.presentationDetents([.fraction(0.8), .large])
                     .presentationDragIndicator(.visible)
@@ -237,14 +608,12 @@ struct MyDayPlanView: View {
 
                 CommonSelectionBottomSheet(
                     title: "Select Route",
-                    items: viewModel.AllRouteList,
+                    items: viewModel.RouteList,
                     displayName: { $0.name ?? "" }
                 ) { item in
                     print(item)
                     viewModel.RouteName = item.name ?? ""
                     viewModel.RouteNameID = item.id ?? 0
-                    
-                
                     
                 }.presentationDetents([.fraction(0.8), .large])
                     .presentationDragIndicator(.visible)
@@ -254,11 +623,36 @@ struct MyDayPlanView: View {
 
                 CommonMultiCheckboxBottomSheet(
                     title: "Joint Work",
-                    items: viewModel.AllRouteList,
+                    items: viewModel.AllJointWorkList,
+                    preSelectedIDs: Set(
+                    (viewModel.SelecetdJointWork ?? []).map { $0.id }
+                    ),
+                    displayName: { $0.name ?? "" }
+                ) { selectedItems in
+                   
+                    viewModel.SelecetdJointWork = selectedItems
+                
+
+                    let names = selectedItems.compactMap { $0.name }
+                    print(names.joined(separator: ", "))
+                }.presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
+            }
+            
+            
+            .sheet(isPresented: $viewModel.ShowRetailerSheet) {
+
+                CommonMultiCheckboxBottomSheet(
+                    title: "Please Select Retailer",
+                    items: viewModel.AllRetailerList,
+                    preSelectedIDs: Set(
+                               (viewModel.SelecetdRetailer ?? []).map { $0.id }
+                           ),
                     displayName: { $0.name ?? "" }
                 ) { selectedItems in
                     
-                    print(selectedItems)
+                    viewModel.SelecetdRetailer = selectedItems
+                    
 
                     let names = selectedItems.compactMap { $0.name }
                     print(names.joined(separator: ", "))
@@ -267,14 +661,24 @@ struct MyDayPlanView: View {
             }
             
    
+            .onChange(of: viewModel.audioFilePath) { oldValue, newValue in
+
+                if !newValue.isEmpty {
+
+                    let url = URL(fileURLWithPath: newValue)
+
+                    player.loadAudio(url: url)
+                }
+            }
             
         }.navigationBarBackButtonHidden(true)
             .ignoresSafeArea(.all)
             .onAppear{
                 
                 Task{
-                    
                     await self.viewModel.getLocalData()
+                    
+                    await self.viewModel.FetchMyDayplan()
                     
                     print(viewModel.AllWorkType)
                 }
@@ -394,9 +798,13 @@ struct WorkWithView: View {
 
 
 
+@available(iOS 17.0, *)
 struct RemarkView: View {
     @Binding  var remarks:String
+    @Binding var audioFilePath: String
     @Environment(\.colorScheme) var colorScheme
+    @StateObject private var recorder = AudioRecorder()
+    @State private var animateMic = false
     private var isPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad
     }
@@ -433,24 +841,24 @@ struct RemarkView: View {
                          
                      }.frame(height: isPad ? 38 : 28)
                          .background(
-                             colorScheme == .dark
-                             ? Color(.secondarySystemBackground)
-                             : Color.appPrimaryLight
+                            colorScheme == .dark
+                            ? Color(.secondarySystemBackground)
+                            : Color.appPrimaryLight
                          )
                          .clipShape(
-                             UnevenRoundedRectangle(
-                                 topLeadingRadius: 0,
-                                 bottomLeadingRadius: 0,
-                                 bottomTrailingRadius: 0,
-                                 topTrailingRadius: 2
-                             )
+                            UnevenRoundedRectangle(
+                                topLeadingRadius: 0,
+                                bottomLeadingRadius: 0,
+                                bottomTrailingRadius: 0,
+                                topTrailingRadius: 2
+                            )
                          )
                  }
                  
                  Spacer()
                  
                  ZStack(alignment: .topLeading) {
-
+                     
                      if remarks.isEmpty {
                          Text("Enter the Remarks (or) Select from Template")
                              .font(.poppinsMedium(isPad ? 14 : 12))
@@ -458,7 +866,7 @@ struct RemarkView: View {
                              .padding(.top, 16)
                              .padding(.leading, 8)
                      }
-
+                     
                      TextEditor(text: $remarks)
                          .font(.poppinsMedium(isPad ? 14 : 12))
                          .scrollContentBackground(.hidden)
@@ -466,16 +874,59 @@ struct RemarkView: View {
                  }
                  Spacer()
                  
-                 
+                 if audioFilePath.isEmpty{
                  HStack{
                      Spacer()
-                     Image("Microphone")
-                         .resizable()
-                         .frame(width:isPad ? 42 : 32,height: isPad ? 42 : 32)
-                         .padding(.trailing,8)
-                         .padding(.bottom,8)
-                     
+                     HStack(spacing: 12) {
+                         
+                         if recorder.isRecording {
+                             
+                             VoiceWaveView(level: recorder.audioLevel)
+                             
+                             Text("Recording...")
+                                 .font(.caption)
+                                 .foregroundColor(.red)
+                         }
+                         
+                         Image("Microphone")
+                             .resizable()
+                             .frame(
+                                width: isPad ? 42 : 32,
+                                height: isPad ? 42 : 32
+                             )
+                             .padding(.trailing, 8)
+                             .padding(.bottom, 8)
+                             .onTapGesture {
+                                 
+                                 if recorder.isRecording {
+                                     
+                                     recorder.stopRecording()
+                                     
+                                     if let audioURL = recorder.recordedAudioURL {
+                                         
+                                         audioFilePath = audioURL.path
+                                         
+                                         
+                                     }
+                                     
+                                 } else {
+                                     
+                                     AVAudioApplication.requestRecordPermission { granted in
+                                         
+                                         DispatchQueue.main.async {
+                                             
+                                             if granted {
+                                                 recorder.startRecording()
+                                             } else {
+                                                 print("Microphone Permission Denied")
+                                             }
+                                         }
+                                     }
+                                 }
+                             }
+                     }
                  }
+             }
                  
                  
              } .frame(height: isPad ? 156 : 126)
@@ -614,11 +1065,29 @@ struct CommonMultiCheckboxBottomSheet<T: Identifiable>: View {
 
     @State private var searchText = ""
     @State private var selectedIDs: Set<T.ID> = []
+   
 
-    let title: String
-    let items: [T]
-    let displayName: (T) -> String
-    let onDone: ([T]) -> Void
+        let title: String
+        let items: [T]
+        let preSelectedIDs: Set<T.ID>
+        let displayName: (T) -> String
+        let onDone: ([T]) -> Void
+
+        init(
+            title: String,
+            items: [T],
+            preSelectedIDs: Set<T.ID> = [],
+            displayName: @escaping (T) -> String,
+            onDone: @escaping ([T]) -> Void
+        ) {
+            self.title = title
+            self.items = items
+            self.preSelectedIDs = preSelectedIDs
+            self.displayName = displayName
+            self.onDone = onDone
+
+            _selectedIDs = State(initialValue: preSelectedIDs)
+        }
 
     private var isPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad

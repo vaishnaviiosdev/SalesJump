@@ -11,6 +11,10 @@ internal import CoreData
 class UserSetup {
 
     static let shared = UserSetup()
+    
+    var IsDistributorBased: Bool = false
+    
+    
 
     let context = CoreDataStack.shared.newBackgroundContext()
 
@@ -22,6 +26,8 @@ class UserSetup {
             let setup = try JSONDecoder().decode(AppSetupData.self,from: data)
 
               print(setup)
+                
+                IsDistributorBased = (setup.IsDistributorBased ?? "false").lowercased() == "true"
                 
             }
         } catch {
