@@ -56,8 +56,8 @@ class AppRouter: ObservableObject {
 
     func loginSuccess() {
         isLoggedIn = true
-        root = .dashboard
-        //root = .MasterSync
+        //root = .dashboard
+        root = .MasterSync
     }
     
     func MasterSyncSuccess() {

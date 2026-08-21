@@ -8,7 +8,6 @@
 import SwiftUI
 import AVFAudio
 
-@available(iOS 17.0, *)
 struct MyDayPlanView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var viewModel = MyDayPlanViewModel()
@@ -20,13 +19,14 @@ struct MyDayPlanView: View {
     @State private var showCamera = false
     @State private var capturedImage: UIImage?
     @StateObject private var player = AudioPlayerManager()
-  
-    
+    @FocusState private var isRemarksFocused: Bool
+    @StateObject private var toast = Toastmanager.shared
+   
     var body: some View {
         ZStack{
             if colorScheme == .dark {
                 Color(.systemGroupedBackground)
-            }else {
+            }else{
                 Color(UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 1.00))
             }
             
@@ -37,18 +37,21 @@ struct MyDayPlanView: View {
                     Text("Day Plan")
                         .font(.poppinsMedium(isPad ? 18 : 16))
                         .foregroundStyle(Color.primary)
-
+                    
                     HStack {
-                        Image("Up Arrow")
-                            .renderingMode(.template)
-                              .resizable()
-                              .foregroundStyle(Color.primary)
-                            .frame(width: 24, height: 24)
-                            .rotationEffect(.degrees(-90))
-                            .padding(.leading, 20)
-                            .onTapGesture {
-                                presentationMode.wrappedValue.dismiss()
-                            }
+                        Button {
+                            presentationMode.wrappedValue.dismiss()
+                        } label: {
+                            Image("Up Arrow")
+                                .renderingMode(.template)
+                                .resizable()
+                                .foregroundStyle(Color.primary)
+                                .frame(width: 24, height: 24)
+                                .rotationEffect(.degrees(-90))
+                                .contentShape(Rectangle())
+                                .padding(.leading, 20)
+                                .padding(.vertical, 10) 
+                        }
 
                         Spacer()
                     }
@@ -58,7 +61,7 @@ struct MyDayPlanView: View {
                 .background(Color(uiColor: .systemBackground))
                 .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.4 : 0.12), radius: 3, x: 0, y: 2)
                 .padding(.top, 35)
-                
+                ScrollViewReader { proxy in
                 ScrollView(showsIndicators: true){
                     VStack(spacing: 15){
                         
@@ -91,6 +94,8 @@ struct MyDayPlanView: View {
                         }
                         
                         // Setup Based Name Was Change
+                        
+                        if UserSetup.shared.IsTourPlanRetailerBased == true{
                         VStack{
                             SelectionFieldView(title: "Outlet",value:"Select",isMandatory: true) {
                                 print("Outlet")
@@ -257,6 +262,7 @@ struct MyDayPlanView: View {
                         .background( colorScheme == .dark ? Color(.secondarySystemBackground):Color.white)
                         .cornerRadius(4)
                         .shadow(color: colorScheme == .dark ? .clear : .black.opacity(0.1),radius: 4,x: 0,y: 2)
+                    }
                         
                         
                         WorkWithView(selectedType: $viewModel.selectedType)
@@ -433,61 +439,67 @@ struct MyDayPlanView: View {
                         }.animation(.easeInOut(duration: 0.25), value: viewModel.selectedType)
                         
                         
-                        RemarkView(remarks: $viewModel.remarks,audioFilePath: $viewModel.audioFilePath)
+                        RemarkView(remarks: $viewModel.remarks,audioFilePath: $viewModel.audioFilePath,isFocused: $isRemarksFocused) .id("remarkSection")
                         
                         if !viewModel.audioFilePath.isEmpty{
-                        HStack(spacing: 12) {
-                            
-                            Image(systemName:
-                                    player.isPlaying
-                                  ? "pause.fill"
-                                  : "play.fill")
-                            .resizable()
-                            .frame(
-                                width: isPad ? 30 : 20,
-                                height: isPad ? 30 : 20
-                            )
-                            .padding(.leading,8)
-                            .onTapGesture {
-                                player.playPause()
-                            }
-                            
-                            ProgressView(
-                                value: player.currentTime,
-                                total: max(player.duration, 1)
-                            )
-                            .frame(maxWidth: .infinity)
-                            
-                            Text(
-                                "\(player.timeString(player.currentTime))/\(player.timeString(player.duration))"
-                            )
-                            .font(.caption)
-                            
-                            Image(systemName: "trash.fill")
+                            HStack(spacing: 12) {
+                                
+                                Image(systemName:
+                                        player.isPlaying
+                                      ? "pause.fill"
+                                      : "play.fill")
                                 .resizable()
                                 .frame(
                                     width: isPad ? 30 : 20,
                                     height: isPad ? 30 : 20
                                 )
-                                .foregroundColor(.red)
-                                .padding(.trailing,8)
+                                .padding(.leading,8)
                                 .onTapGesture {
-                                    
-                                    player.deleteAudio(at: viewModel.audioFilePath)
-                                    viewModel.audioFilePath = ""
+                                    player.playPause()
                                 }
+                                
+                                ProgressView(
+                                    value: player.currentTime,
+                                    total: max(player.duration, 1)
+                                )
+                                .frame(maxWidth: .infinity)
+                                
+                                Text(
+                                    "\(player.timeString(player.currentTime))/\(player.timeString(player.duration))"
+                                )
+                                .font(.caption)
+                                
+                                Image(systemName: "trash.fill")
+                                    .resizable()
+                                    .frame(
+                                        width: isPad ? 30 : 20,
+                                        height: isPad ? 30 : 20
+                                    )
+                                    .foregroundColor(.red)
+                                    .padding(.trailing,8)
+                                    .onTapGesture {
+                                        Task{
+                                        let isSuccess = await player.deleteAudio(at: viewModel.audioFilePath)
+                                            if isSuccess{
+                                                viewModel.audioFilePath = ""
+                                                Toastmanager.shared.show("Audio Delete successfully")
+                                            }else{
+                                                Toastmanager.shared.show("Audio Delete failed")
+                                            }
+                                        }
+                                    }
+                            }
+                            .frame(height: isPad ? 60 : 50)
+                            .frame(maxWidth: .infinity)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(Color(UIColor(red: 0.85,green: 0.85,blue: 0.85,alpha: 1.00)),lineWidth: 1
+                                           )
+                            )
+                            
+                            
                         }
-                        .frame(height: isPad ? 60 : 50)
-                        .frame(maxWidth: .infinity)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color(UIColor(red: 0.85,green: 0.85,blue: 0.85,alpha: 1.00)),lineWidth: 1
-                                       )
-                        )
-                    
                         
-                    }
-                           
                         
                         
                         VStack(alignment: .center){
@@ -500,25 +512,25 @@ struct MyDayPlanView: View {
                             Text("Capture Photo")
                                 .font(.poppinsMedium(isPad ? 18 : 16))
                                 .foregroundStyle(.appPrimary)
-                                
+                            
                             
                             Spacer()
                             
                         }.frame(height: isPad ? 104 : 84)
                             .frame(maxWidth: .infinity)
-                        .overlay(
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color.appPrimary,style: StrokeStyle(lineWidth: 1,dash: [4, 2]))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(Color.appPrimary,style: StrokeStyle(lineWidth: 1,dash: [4, 2]))
                             )
                             .contentShape(Rectangle())
                             .onTapGesture {
-                            showCamera = true
+                                showCamera = true
                             }
                             .fullScreenCover(isPresented: $showCamera) {
-                                       FaceCameraView { image in
-                                           self.capturedImage = image
-                                       }
-                                   }
+                                FaceCameraView { image in
+                                    self.capturedImage = image
+                                }
+                            }
                         
                         
                         
@@ -527,7 +539,14 @@ struct MyDayPlanView: View {
                     }.padding(10)
                     
                 }
-                
+                .onChange(of: isRemarksFocused) { _, focused in
+                        if focused {
+                            withAnimation {
+                                proxy.scrollTo("remarkSection", anchor: .bottom)
+                            }
+                        }
+                    }
+            }
                 Spacer()
                 
                 VStack {
@@ -576,7 +595,29 @@ struct MyDayPlanView: View {
                 ) { item in
                     viewModel.HeadQuarterName = item.name ?? ""
                     viewModel.HeadQuarterID = item.id ?? ""
-                  
+                    
+                    Task{
+                        let isExist = await viewModel.CheckTodaySyncSubordinate(SubordinateID: item.id ?? "")
+                        if isExist {
+                            print("Subordinate ID already exists")
+                            await self.viewModel.getLocalData()
+                        } else {
+                            print("Subordinate ID not found")
+                            viewModel.isLoading = true
+                        let success  =  await viewModel.FieldMasterSync(id: item.id ?? "")
+                            
+                            if success {
+                                await viewModel.getLocalData()
+                            }
+                            
+                            viewModel.isLoading = false
+                            
+                        }
+                        
+                        viewModel.RemoveFields()
+                        
+                    }
+                    
                 }.presentationDetents([.fraction(0.8), .large])
                     .presentationDragIndicator(.visible)
             }
@@ -670,20 +711,36 @@ struct MyDayPlanView: View {
                     player.loadAudio(url: url)
                 }
             }
+            .overlay {
+                if toast.isShowing {
+                    ToastView(message: toast.message)
+                        .padding(.bottom, 80)
+                        .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
+                }
+            }
             
-        }.navigationBarBackButtonHidden(true)
-            .ignoresSafeArea(.all)
+            if viewModel.isLoading{
+                
+                
+                Loader()
+            }
+            
+        }
+        .contentShape(Rectangle())
+        .navigationBarBackButtonHidden(true)
+            .ignoresSafeArea(.container, edges: .top)
             .onAppear{
                 
                 Task{
-                    await self.viewModel.getLocalData()
-                    
                     await self.viewModel.FetchMyDayplan()
-                    
-                    print(viewModel.AllWorkType)
+                    await self.viewModel.getLocalData()
+                    await self.viewModel.setTodayPlan()
                 }
                 
             }
+                .onTapGesture {
+                    UIApplication.shared.dismissKeyboard()
+                }
     }
 }
 
@@ -798,13 +855,13 @@ struct WorkWithView: View {
 
 
 
-@available(iOS 17.0, *)
 struct RemarkView: View {
     @Binding  var remarks:String
     @Binding var audioFilePath: String
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var recorder = AudioRecorder()
     @State private var animateMic = false
+    var isFocused: FocusState<Bool>.Binding
     private var isPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad
     }
@@ -871,6 +928,7 @@ struct RemarkView: View {
                          .font(.poppinsMedium(isPad ? 14 : 12))
                          .scrollContentBackground(.hidden)
                          .background(Color.clear)
+                         .focused(isFocused)
                  }
                  Spacer()
                  
@@ -899,14 +957,21 @@ struct RemarkView: View {
                              .onTapGesture {
                                  
                                  if recorder.isRecording {
-                                     
-                                     recorder.stopRecording()
-                                     
-                                     if let audioURL = recorder.recordedAudioURL {
-                                         
-                                         audioFilePath = audioURL.path
+                                     Task{
+                                         let isSuccess =  await recorder.stopRecording()
                                          
                                          
+                                         if isSuccess{
+                                             if let audioURL = recorder.recordedAudioURL {
+                                                 audioFilePath = audioURL.path
+                                                 Toastmanager.shared.show("Audio Upload successfully")
+                                             }else{
+                                                 Toastmanager.shared.show("Audio Upload failed")
+                                             }
+                                         }else{
+                                             
+                                             Toastmanager.shared.show("Audio Upload failed")
+                                         }
                                      }
                                      
                                  } else {
@@ -1175,6 +1240,12 @@ struct CommonMultiCheckboxBottomSheet<T: Identifiable>: View {
                                     size: isPad ? 24 : 20
                                 )
                             )
+                            .foregroundColor(
+                                selectedIDs.contains(item.id)
+                                ? .appPrimary
+                                : .gray
+                            )
+                            
 
                             Text(displayName(item))
                                 .font(
@@ -1215,12 +1286,12 @@ struct CommonMultiCheckboxBottomSheet<T: Identifiable>: View {
 
             } label: {
 
-                Text("Done")
+                Text("Save")
                     .font(.poppinsSemiBold(16))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 50)
-                    .background(Color.blue)
+                    .background(Color.appPrimary)
                     .cornerRadius(8)
             }
             .padding()

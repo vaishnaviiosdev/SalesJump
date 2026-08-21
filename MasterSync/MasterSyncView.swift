@@ -220,22 +220,21 @@ struct MasterSyncView: View {
                            .presentationDragIndicator(.visible)
                    }
             
-            .onChange(of: viewModel.getHqSf_Code) { newValue in
-             
-                Task{
+            .onChange(of: viewModel.getHqSf_Code) { _, newValue in
+                Task {
                     for index in viewModel.MasterSyncAPI.indices {
-                        
-                        if viewModel.MasterSyncAPI[index].Master_Name != "quickactionsetup"  || viewModel.MasterSyncAPI[index].Master_Name != "subordinate" {
+                        if viewModel.MasterSyncAPI[index].Master_Name != "quickactionsetup" &&
+                           viewModel.MasterSyncAPI[index].Master_Name != "subordinate" {
                             viewModel.MasterSyncAPI[index].HqSf_Code = newValue
                         }
-                            
                     }
-                   await viewModel.SyncAll()
-                    
+
+                    await viewModel.SavetodaySyncSubordinate(subordinate: newValue)
+                    await viewModel.SyncAll()
                 }
             }
             
-            .onChange(of: viewModel.AllApiCompleted){ isCompleted in
+            .onChange(of: viewModel.AllApiCompleted){ _,isCompleted in
                 if isLogin == true{
                     
                     guard isCompleted else { return }
