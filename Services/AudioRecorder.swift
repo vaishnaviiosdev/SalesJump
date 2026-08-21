@@ -12,6 +12,20 @@ import Combine
 import SwiftUI
 
 
+class AudioFile {
+    
+    static let shared = AudioFile()
+    
+    var filename:String = ""
+    
+    
+}
+
+struct UploadResponse: Codable {
+    let message: String
+    let audio: String
+}
+
 final class AudioRecorder: NSObject, ObservableObject {
 
     @Published var isRecording = false
@@ -86,7 +100,7 @@ final class AudioRecorder: NSObject, ObservableObject {
         }
     }
 
-    func stopRecording() {
+    func stopRecording() async -> Bool {
 
         timer?.invalidate()
         timer = nil
@@ -96,10 +110,85 @@ final class AudioRecorder: NSObject, ObservableObject {
         isRecording = false
         audioLevel = 0
 
-        if let url = recordedAudioURL {
-            print("Audio Saved:", url.path)
+        guard let url = recordedAudioURL else {
+            return false
+        }
+
+        print("Audio Saved:", url.path)
+
+        let isSuccess = await SaveAudio()
+
+        if isSuccess {
+            print("Audio Upload Success")
+        } else {
+            print("Audio Upload Failed")
+        }
+
+        return isSuccess
+    }
+    
+    
+    func SaveAudio() async -> Bool {
+
+        guard let audioURL = recordedAudioURL else {
+            return false
+        }
+
+        guard let url = URL(string: "\(APIClient.shared.Url)audioupload") else {
+            return false
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(SessionManager.shared.JWT_Token)",forHTTPHeaderField: "Authorization")
+
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)",forHTTPHeaderField: "Content-Type")
+
+        var data = Data()
+
+        do {
+
+            let audioData = try Data(contentsOf: audioURL)
+
+            data.append("--\(boundary)\r\n".data(using: .utf8)!)
+            data.append("Content-Disposition: form-data; name=\"files\"; filename=\"audio.m4a\"\r\n".data(using: .utf8)!)
+            data.append("Content-Type: audio/m4a\r\n\r\n".data(using: .utf8)!)
+            data.append(audioData)
+            data.append("\r\n".data(using: .utf8)!)
+            data.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+            let (responseData, response) = try await URLSession.shared.upload(
+                for: request,
+                from: data
+            )
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                return false
+            }
+
+            print("Status Code:", httpResponse.statusCode)
+
+            do {
+                let result = try JSONDecoder().decode(UploadResponse.self, from: responseData)
+
+                print("Message:", result.message)
+                print("Audio Name:", result.audio)
+
+                AudioFile.shared.filename = result.audio
+
+            } catch {
+                print("Decode Error:", error)
+            }
+
+            return (200...299).contains(httpResponse.statusCode)
+
+        } catch {
+            print("Audio Upload Error:", error.localizedDescription)
+            return false
         }
     }
+    
 }
 
 struct VoiceWaveView: View {

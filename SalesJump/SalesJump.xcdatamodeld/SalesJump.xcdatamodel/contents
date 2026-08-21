@@ -9,6 +9,7 @@
         <attribute name="distributor" optional="YES" attributeType="Binary"/>
         <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="masterName" optional="YES" attributeType="String"/>
+        <attribute name="sfcode" optional="YES" attributeType="String"/>
     </entity>
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -17,6 +18,7 @@
         <attribute name="jointwork" optional="YES" attributeType="Binary"/>
         <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="masterName" optional="YES" attributeType="String"/>
+        <attribute name="sfcode" optional="YES" attributeType="String"/>
     </entity>
     <entity name="MyDayPlanEntity" representedClassName="MyDayPlanEntity" syncable="YES" codeGenerationType="class">
         <attribute name="isMyDayPlan" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -28,18 +30,27 @@
         <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="masterName" optional="YES" attributeType="String"/>
         <attribute name="retailer" optional="YES" attributeType="Binary"/>
+        <attribute name="sfcode" optional="YES" attributeType="String"/>
     </entity>
     <entity name="RouteEntity" representedClassName="RouteEntity" syncable="YES" codeGenerationType="class">
         <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="masterName" optional="YES" attributeType="String"/>
         <attribute name="route" optional="YES" attributeType="Binary"/>
+        <attribute name="sfcode" optional="YES" attributeType="String"/>
     </entity>
     <entity name="SubordinateEntity" representedClassName="SubordinateEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="sfcode" optional="YES" attributeType="String"/>
         <attribute name="subordinate" optional="YES" attributeType="Binary"/>
+    </entity>
+    <entity name="TodaySyncSubordinate" representedClassName="TodaySyncSubordinate" syncable="YES" codeGenerationType="class">
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="subordinateID" optional="YES" attributeType="String"/>
     </entity>
     <entity name="WorkTypeEntity" representedClassName="WorkTypeEntity" syncable="YES" codeGenerationType="class">
         <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="masterName" optional="YES" attributeType="String"/>
+        <attribute name="sfcode" optional="YES" attributeType="String"/>
         <attribute name="workType" optional="YES" attributeType="Binary"/>
     </entity>
 </model>

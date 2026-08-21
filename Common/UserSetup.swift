@@ -13,6 +13,7 @@ class UserSetup {
     static let shared = UserSetup()
     
     var IsDistributorBased: Bool = false
+    var IsTourPlanRetailerBased:Bool = false
     
     
 
@@ -28,6 +29,7 @@ class UserSetup {
               print(setup)
                 
                 IsDistributorBased = (setup.IsDistributorBased ?? "false").lowercased() == "true"
+                IsTourPlanRetailerBased = (setup.IsTourPlanRetailerBased ?? "false").lowercased() == "true"
                 
             }
         } catch {

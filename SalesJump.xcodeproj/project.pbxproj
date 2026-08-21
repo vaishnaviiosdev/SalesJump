@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		381C79AF30346E9D00EB0C07 /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381C79AE30346E9200EB0C07 /* PickerView.swift */; };
 		3823B38A3035CC0C00676D64 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3823B3893035CC0C00676D64 /* AudioRecorder.swift */; };
 		3823B38C3035D2DD00676D64 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3823B38B3035D2DD00676D64 /* AudioPlayerManager.swift */; };
-		381C79AF30346E9D00EB0C07 /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381C79AE30346E9200EB0C07 /* PickerView.swift */; };
 		3827F9EA3032D16200F665F3 /* MyDayPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827F9E93032D16200F665F3 /* MyDayPlanView.swift */; };
 		3827F9EC3032DAD800F665F3 /* SelectionFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827F9EB3032DAD800F665F3 /* SelectionFieldView.swift */; };
 		3827F9EE3032DB7200F665F3 /* MyDayPlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827F9ED3032DB7200F665F3 /* MyDayPlanViewModel.swift */; };
@@ -19,6 +19,9 @@
 		383365E6302C9AAB0054B736 /* MasterSyncModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383365E5302C9AAB0054B736 /* MasterSyncModel.swift */; };
 		383365E8302C9BDE0054B736 /* BottomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383365E7302C9BDE0054B736 /* BottomTabBar.swift */; };
 		38485775303439190065A453 /* LeaveHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38485774303439190065A453 /* LeaveHistoryView.swift */; };
+		384AA67E30381E8700DD6266 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384AA67D30381E8700DD6266 /* Loader.swift */; };
+		384AA682303822AC00DD6266 /* progress_dialog.gif in Resources */ = {isa = PBXBuildFile; fileRef = 384AA681303822AC00DD6266 /* progress_dialog.gif */; };
+		384AA6A130386D7A00DD6266 /* GlobalFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384AA6A030386D7A00DD6266 /* GlobalFunc.swift */; };
 		386C56A8301722C10066DC31 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386C56A7301722C10066DC31 /* WelcomeView.swift */; };
 		386C56B9301734350066DC31 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386C56B8301730C50066DC31 /* Helper.swift */; };
 		386C56BA301735820066DC31 /* WorkSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 386C56B130172C060066DC31 /* WorkSans-Medium.ttf */; };
@@ -54,9 +57,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		381C79AE30346E9200EB0C07 /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
 		3823B3893035CC0C00676D64 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		3823B38B3035D2DD00676D64 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
-		381C79AE30346E9200EB0C07 /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
 		3827F9E93032D16200F665F3 /* MyDayPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayPlanView.swift; sourceTree = "<group>"; };
 		3827F9EB3032DAD800F665F3 /* SelectionFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionFieldView.swift; sourceTree = "<group>"; };
 		3827F9ED3032DB7200F665F3 /* MyDayPlanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayPlanViewModel.swift; sourceTree = "<group>"; };
@@ -66,6 +69,9 @@
 		383365E5302C9AAB0054B736 /* MasterSyncModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterSyncModel.swift; sourceTree = "<group>"; };
 		383365E7302C9BDE0054B736 /* BottomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabBar.swift; sourceTree = "<group>"; };
 		38485774303439190065A453 /* LeaveHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaveHistoryView.swift; sourceTree = "<group>"; };
+		384AA67D30381E8700DD6266 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
+		384AA681303822AC00DD6266 /* progress_dialog.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = progress_dialog.gif; sourceTree = "<group>"; };
+		384AA6A030386D7A00DD6266 /* GlobalFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunc.swift; sourceTree = "<group>"; };
 		386C568930171FC90066DC31 /* SalesJump.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SalesJump.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		386C56A7301722C10066DC31 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		386C56AD30172BD90066DC31 /* WorkSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WorkSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -143,9 +149,18 @@
 			path = MasterSync;
 			sourceTree = "<group>";
 		};
+		384AA67F30381FCE00DD6266 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				384AA681303822AC00DD6266 /* progress_dialog.gif */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		386C568030171FC90066DC31 = {
 			isa = PBXGroup;
 			children = (
+				384AA67F30381FCE00DD6266 /* Resources */,
 				383365E0302C9A590054B736 /* MasterSync */,
 				3880E0143018C62F00075E50 /* Services */,
 				386C56B73017307A0066DC31 /* Common */,
@@ -264,6 +279,7 @@
 				386C56B8301730C50066DC31 /* Helper.swift */,
 				38C718FE302EDB2D0005DAD3 /* UserSetup.swift */,
 				3827F9EB3032DAD800F665F3 /* SelectionFieldView.swift */,
+				384AA6A030386D7A00DD6266 /* GlobalFunc.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -282,6 +298,7 @@
 				3827FA1A3033361D00F665F3 /* faceCaptureCamera.swift */,
 				3823B3893035CC0C00676D64 /* AudioRecorder.swift */,
 				3823B38B3035D2DD00676D64 /* AudioPlayerManager.swift */,
+				384AA67D30381E8700DD6266 /* Loader.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -401,6 +418,7 @@
 			files = (
 				386C56BD301735F20066DC31 /* WorkSans-SemiBold.ttf in Resources */,
 				386C56BF301735FE0066DC31 /* WorkSans-ExtraBold.ttf in Resources */,
+				384AA682303822AC00DD6266 /* progress_dialog.gif in Resources */,
 				386C56BA301735820066DC31 /* WorkSans-Medium.ttf in Resources */,
 				386C56BE301735F70066DC31 /* WorkSans-Regular.ttf in Resources */,
 				386C56BB301735920066DC31 /* WorkSans-Bold.ttf in Resources */,
@@ -435,6 +453,7 @@
 				386C56C330174F020066DC31 /* LoginView.swift in Sources */,
 				3823B38C3035D2DD00676D64 /* AudioPlayerManager.swift in Sources */,
 				3823B38A3035CC0C00676D64 /* AudioRecorder.swift in Sources */,
+				384AA6A130386D7A00DD6266 /* GlobalFunc.swift in Sources */,
 				383365E2302C9A6E0054B736 /* MasterSyncView.swift in Sources */,
 				383365E4302C9A8D0054B736 /* MasterSyncViewModel.swift in Sources */,
 				387443D730247C00008EFC66 /* LocationViewModel.swift in Sources */,
@@ -453,6 +472,7 @@
 				3880E0193018D22D00075E50 /* APIClient.swift in Sources */,
 				383365E8302C9BDE0054B736 /* BottomTabBar.swift in Sources */,
 				388C569F301A1D49002C252C /* SessionManager.swift in Sources */,
+				384AA67E30381E8700DD6266 /* Loader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -87,9 +87,6 @@ class MasterSyncViewModel: ObservableObject {
     }
     
     
-    
-    
- 
     func SyncAll() async {
         for index in MasterSyncAPI.indices {
             MasterSyncAPI[index].ShowContandLoading = true
@@ -165,7 +162,7 @@ class MasterSyncViewModel: ObservableObject {
                }
                
            
-               await saveMasterSyncData(masterName: Master_Name, data: data)
+            await saveMasterSyncData(masterName: Master_Name, data: data, hqsf: HqSf_Code)
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                  let dataCount = json["dataCount"] as? Int {
 
@@ -186,7 +183,7 @@ class MasterSyncViewModel: ObservableObject {
       
     }
     
-    func saveMasterSyncData(masterName: String, data: Data) async {
+    func saveMasterSyncData(masterName: String, data: Data,hqsf:String) async {
 
         do {
             switch masterName {
@@ -196,15 +193,11 @@ class MasterSyncViewModel: ObservableObject {
                 
                 await context.perform {
                     do {
-        let request: NSFetchRequest<RetailerEntity> = RetailerEntity.fetchRequest()
-        let oldRecords = try context.fetch(request)
-            for item in oldRecords {
-                            context.delete(item)
-                        }
                         let entity = RetailerEntity(context: context)
                         entity.retailer = try JSONEncoder().encode(items.response)
                         entity.lastUpdated = Date()
                         entity.masterName = items.masterName
+                        entity.sfcode = hqsf
                         if context.hasChanges {
                             try context.save()
                         }
@@ -219,15 +212,10 @@ class MasterSyncViewModel: ObservableObject {
                 await context.perform {
                     do {
                         
-                        let request: NSFetchRequest<SubordinateEntity> = SubordinateEntity.fetchRequest()
-                        let oldRecords = try context.fetch(request)
-                            for item in oldRecords {
-                                            context.delete(item)
-                            }
-
-                        
                         let entity = SubordinateEntity(context: context)
                         entity.subordinate = try JSONEncoder().encode(items.response)
+                        entity.lastUpdated = Date()
+                        entity.sfcode = SessionManager.shared.sfCode
                         if context.hasChanges {
                             try context.save()
                         }
@@ -242,15 +230,11 @@ class MasterSyncViewModel: ObservableObject {
                 await context.perform {
                     do {
                         
-                        let request: NSFetchRequest<WorkTypeEntity> = WorkTypeEntity.fetchRequest()
-                        let oldRecords = try context.fetch(request)
-                            for item in oldRecords {
-                                            context.delete(item)
-                            }
                         let entity = WorkTypeEntity(context: context)
                         entity.workType = try JSONEncoder().encode(items.response)
                         entity.lastUpdated = Date()
                         entity.masterName = items.masterName
+                        entity.sfcode = hqsf
                         if context.hasChanges {
                             try context.save()
                         }
@@ -265,15 +249,12 @@ class MasterSyncViewModel: ObservableObject {
                 let context = CoreDataStack.shared.newBackgroundContext()
                 await context.perform {
                     do {
-                        let request: NSFetchRequest<DistributorEntity> = DistributorEntity.fetchRequest()
-                        let oldRecords = try context.fetch(request)
-                            for item in oldRecords {
-                                            context.delete(item)
-                            }
+
                         let entity = DistributorEntity(context: context)
                         entity.distributor = try JSONEncoder().encode(items.response)
                         entity.lastUpdated = Date()
                         entity.masterName = items.masterName
+                        entity.sfcode = hqsf
                         if context.hasChanges {
                             try context.save()
                         }
@@ -288,15 +269,11 @@ class MasterSyncViewModel: ObservableObject {
                     do {
                         
                         let request: NSFetchRequest<RouteEntity> = RouteEntity.fetchRequest()
-                        let oldRecords = try context.fetch(request)
-                            for item in oldRecords {
-                                            context.delete(item)
-                            }
-                        
                         let entity = RouteEntity(context: context)
                         entity.route = try JSONEncoder().encode(items.response)
                         entity.lastUpdated = Date()
                         entity.masterName = items.masterName
+                        entity.sfcode = hqsf
                         if context.hasChanges {
                             try context.save()
                         }
@@ -310,16 +287,11 @@ class MasterSyncViewModel: ObservableObject {
                 let context = CoreDataStack.shared.newBackgroundContext()
                 await context.perform {
                     do {
-                        
-                        let request: NSFetchRequest<JointworkEntity> = JointworkEntity.fetchRequest()
-                        let oldRecords = try context.fetch(request)
-                     for item in oldRecords {
-                                context.delete(item)
-                            }
                         let entity = JointworkEntity(context: context)
                         entity.jointwork = try JSONEncoder().encode(items.response)
                         entity.lastUpdated = Date()
                         entity.masterName = items.masterName
+                        entity.sfcode = hqsf
                         if context.hasChanges {
                             try context.save()
                         }
@@ -371,6 +343,11 @@ class MasterSyncViewModel: ObservableObject {
                 MyDayPlanEntity.fetchRequest()
 
             guard let entity = try context.fetch(request).first else {
+                if isLogIn{
+                    
+                   await SyncAll()
+                    
+                }
                 return
             }
 
@@ -388,6 +365,8 @@ class MasterSyncViewModel: ObservableObject {
                     }
                     
                 }
+                
+                await SavetodaySyncSubordinate(subordinate: plan?.hqCode ?? "")
                 
                 if isLogIn{
                     
@@ -435,4 +414,24 @@ class MasterSyncViewModel: ObservableObject {
             }
         }
     }
+    
+    
+    func SavetodaySyncSubordinate(subordinate: String) async {
+        
+        let context = CoreDataStack.shared.newBackgroundContext()
+        await context.perform {
+            do {
+                let entity = TodaySyncSubordinate(context: context)
+                entity.subordinateID =  subordinate
+                entity.lastUpdated = Date()
+             
+                if context.hasChanges {
+                    try context.save()
+                }
+            } catch {
+                print("CoreData Save Error: \(error)")
+            }
+        }
+    }
+    
 }

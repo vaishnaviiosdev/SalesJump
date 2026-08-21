@@ -78,16 +78,31 @@ final class AudioPlayerManager: NSObject, ObservableObject {
         timer?.invalidate()
     }
 
-    func deleteAudio(at path: String) {
+    func deleteAudio(at path: String) async -> Bool {
 
         stop()
 
         do {
-            try FileManager.default.removeItem(
-                atPath: path
-            )
+
+            if FileManager.default.fileExists(atPath: path) {
+                try FileManager.default.removeItem(atPath: path)
+                print("Local Audio Deleted")
+            }
+
+            let isSuccess = await deleteFile()
+
+            if isSuccess {
+                print("Server Audio Delete Success")
+            } else {
+                print("Server Audio Delete Failed")
+            }
+
+            return isSuccess
+
         } catch {
-            print(error.localizedDescription)
+
+            print("Delete Error:", error.localizedDescription)
+            return false
         }
     }
 
@@ -102,4 +117,38 @@ final class AudioPlayerManager: NSObject, ObservableObject {
             seconds
         )
     }
-}
+    
+    
+    func deleteFile() async -> Bool {
+
+        var components = URLComponents(string: "\(APIClient.shared.Url)mediadelete")!
+
+        components.queryItems = [
+            URLQueryItem(name: "filePath", value: AudioFile.shared.filename)
+        ]
+
+        guard let url = components.url else { return false }
+
+        print("Delete URL:", url)
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("Bearer \(SessionManager.shared.JWT_Token)",
+                         forHTTPHeaderField: "Authorization")
+
+        do {
+            let (_, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                return false
+            }
+
+            print("Delete Status Code:", httpResponse.statusCode)
+
+            return (200...299).contains(httpResponse.statusCode)
+
+        } catch {
+            print("Delete Error:", error.localizedDescription)
+            return false
+        }
+    }}
